@@ -14,8 +14,7 @@ class SearchFragment : Fragment() {
 
     //standard function to call the layout from the .xml file of the fragment
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInflater: Bundle?): View? {
-        val view = inflater.inflate(R.layout.search_screen, container, false)
-        return view
+        return inflater.inflate(R.layout.search_screen, container, false)
     }
 
     //standard function to populate the fragment with the layout from the .xml file of the fragment
