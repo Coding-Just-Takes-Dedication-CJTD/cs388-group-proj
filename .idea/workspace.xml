@@ -126,35 +126,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ce5cf69-de47-4755-9449-ef7930c451e7" name="Changes" comment="Fixed typo from Cyrpta to crypta">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/GameVaultFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/GameVaultFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/HomeFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/SearchFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/SearchFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/SettingsFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/SettingsFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/TrendingFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/ludex_crypta/TrendingFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/game_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/game_details.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/game_rv_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/game_rv_item.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/game_vault_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/game_vault_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/home_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/home_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/on_sale_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/on_sale_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/profile_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/profile_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/profile_settings_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/profile_settings_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/search_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/search_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/settings_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/settings_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/trending_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/trending_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/vault_wishlist_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/vault_wishlist_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/wishlist_screen.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/wishlist_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-    </list>
+    <list default="true" id="6ce5cf69-de47-4755-9449-ef7930c451e7" name="Changes" comment="Attempted to do home page redirection. For example, click search bar, go to search page." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -220,7 +192,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="fixed_typo/john" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -259,7 +231,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "#32 on fixed__typo/john",
+    "git-widget-placeholder": "home-page-redirection-to-other-pages/john",
     "last_opened_file_path": "C:/Users/CN271/AndroidStudioProjects/LudexCyrpta/app/src/main/java/com/example/ludex_cyrpta",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
@@ -406,7 +378,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763572370570</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Attempted to do home page redirection. For example, click search bar, go to search page.">
+      <option name="closed" value="true" />
+      <created>1763932990770</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1763932990772</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -414,7 +394,8 @@
     <MESSAGE value="Sprint 1 Update" />
     <MESSAGE value="Sprint 1 Final Update" />
     <MESSAGE value="Fixed typo from Cyrpta to crypta" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed typo from Cyrpta to crypta" />
+    <MESSAGE value="Attempted to do home page redirection. For example, click search bar, go to search page." />
+    <option name="LAST_COMMIT_MESSAGE" value="Attempted to do home page redirection. For example, click search bar, go to search page." />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
