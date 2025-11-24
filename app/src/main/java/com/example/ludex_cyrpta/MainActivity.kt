@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         bottomNav.selectedItemId = R.id.homePage //default screen is the home page
     }
 
-    private fun swapFrag(newFrag: Fragment) {
+    fun swapFrag(newFrag: Fragment) {
         val fragMngr = supportFragmentManager
         val fragTrnsctn = fragMngr.beginTransaction()
 
