@@ -21,3 +21,5 @@ externalNativeBuild/
 
 captures/
 
+
+app/google-services.json
