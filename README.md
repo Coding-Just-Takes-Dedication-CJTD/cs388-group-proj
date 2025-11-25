@@ -189,16 +189,28 @@ It is an app that collects information from many game databases (like Steam, Epi
 
 ## GitHub Project board
 
-[Add screenshot of your Project Board with the updated status of issues for Milestone 3. Note that these should include the updated issues you worked on for this sprint and not be a duplicate of Milestone 2 Project board.] <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+[Add screenshot of your Project Board with the updated status of issues for Milestone 3. Note that these should include the updated issues you worked on for this sprint and not be a duplicate of Milestone 2 Project board.]
+<img src="https://github.com/Coding-Just-Takes-Dedication-CJTD/cs388-group-proj/blob/main/Git-Mileston3-PB-Update.jpg" width=600>
 
 ## Completed user stories
 
-- List the completed user stories from this unit
-- List any pending user stories / any user stories you decided to cut
-from the original requirements
+List the completed user stories from this unit:
+  - The user can register an account
+  - The user can sign-in and sign-out to the app
+  -  The user can use the navigation bar to go from one page to another
+  -  The user can request games/libraries that they want added to the app (in a support page)
+
+
+List any pending user stories / any user stories you decided to cut from the original requirements
+  - The user can connect to EPIC, Steam, etc with their logins
+  - The user can connect to their console's accounts (XBOX, Nintendo, Playstation, etc)
+  -  The user can connect to EPIC, Steam, etc with their logins
+  -   The user will be able to look for friends they can connect with
+
 
 [Add video/gif of your current application that shows build progress]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+**GIF:**
+<img src="https://github.com/Coding-Just-Takes-Dedication-CJTD/cs388-group-proj/blob/main/login_testing.gif" width=600>
 
 ## App Demo Video
 
