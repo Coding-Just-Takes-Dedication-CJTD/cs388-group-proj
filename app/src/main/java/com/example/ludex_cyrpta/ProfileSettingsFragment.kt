@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileSettingsFragment : Fragment() {
     //standard function to create the fragment
@@ -30,6 +35,13 @@ class ProfileSettingsFragment : Fragment() {
         val tabLayout = view.findViewById<TabLayout>(R.id.psTabLayout)
         val viewPager = view.findViewById<ViewPager2>(R.id.psViewPager)
 
+
+        val logoutBtn: Button = view.findViewById(R.id.logoutBtn)
+
+        logoutBtn.setOnClickListener {
+            logout()
+        }
+
         //setup viewpager2 adapter so that both fragments can appear in 1 page within their respective tabs
         val psPagerAdapter = ProfileSettingsPagerAdapter(this)
         viewPager.adapter = psPagerAdapter
@@ -49,4 +61,24 @@ class ProfileSettingsFragment : Fragment() {
             return ProfileSettingsFragment()
         }
     }
+    private fun logout() {
+        // --- Sign out from Firebase ---
+        FirebaseAuth.getInstance().signOut()
+
+        // --- Clear all fragments from back stack ---
+        parentFragmentManager.popBackStack(
+            null,
+            androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+
+        // --- Navigate to LoginFragment ---
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.mainScreen, LoginFragment())
+            .commit()
+
+        // --- Hide bottom navigation ---
+        val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
+        bottomNav.menu.setGroupVisible(0, false)
+    }
+
 }
