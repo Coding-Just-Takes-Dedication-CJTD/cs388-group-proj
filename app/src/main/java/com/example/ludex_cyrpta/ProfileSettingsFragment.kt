@@ -36,9 +36,10 @@ class ProfileSettingsFragment : Fragment() {
 
         //sets the layout of the tabs and gives the names
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = "Profile"
-                1 -> tab.text = "Settings"
+            tab.text = when (position) {
+                0 -> "Profile"
+                1 -> "Settings"
+                else -> null
             }
         }.attach()
     }
