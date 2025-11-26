@@ -1,13 +1,27 @@
 package com.example.ludex_cyrpta
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +32,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         auth = FirebaseAuth.getInstance()
+
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token -> Log.d("FCM_TOKEN", "Token: $token") }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                if (userId != null) {
+                    // Check first-time login and send welcome
+                    checkFirstTimeAndSendWelcome(userId, token)
+                }
+                // Optional: save token to Firestore for multiple devices
+                saveTokenToFirestore(token)
+            }
+        }
+
+        fun saveTokenToFirestore(token: String) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+            val db = Firebase.firestore
+            db.collection("users").document(userId)
+                .update("tokens", FieldValue.arrayUnion(token))
+                .addOnSuccessListener { println("Token saved!") }
+                .addOnFailureListener { e -> println("Failed to save token: $e") }
+        }
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
+            }
+        }
 
         // Edge-to-edge padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -103,4 +149,67 @@ class MainActivity : AppCompatActivity() {
         fragTrnsctn.commit()
         actvFrag = newFrag
     }
+
+    fun saveTokenToFirestore(token: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val db = Firebase.firestore
+        db.collection("users").document(userId)
+            .update("tokens", FieldValue.arrayUnion(token))
+            .addOnSuccessListener { println("Token saved!") }
+            .addOnFailureListener { e -> println("Failed to save token: $e") }
+    }
+
+
+    private fun sendWelcomeNotificationLocally() {
+        val channelId = "default_channel"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Default Channel",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Welcome to Ludex Crypta!")
+            .setContentText("We hope you enjoy your experience.")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+        }
+
+        NotificationManagerCompat.from(this)
+            .notify(System.currentTimeMillis().toInt(), builder.build())
+    }
+
+
+    private fun checkFirstTimeAndSendWelcome(userId: String, fcmToken: String) {
+        val db = Firebase.firestore
+        val userDoc = db.collection("users").document(userId)
+
+        userDoc.get().addOnSuccessListener { document ->
+            if (!document.exists()) {
+                // First time user -> send welcome notification
+                sendWelcomeNotificationLocally()
+
+                // Save that we sent the welcome message and token
+                userDoc.set(mapOf(
+                    "welcomeSent" to true,
+                    "token" to fcmToken
+                ))
+            } else {
+                // Not first time -> just update token in case it changed
+                userDoc.update("token", fcmToken)
+            }
+        }
+    }
+
+
 }

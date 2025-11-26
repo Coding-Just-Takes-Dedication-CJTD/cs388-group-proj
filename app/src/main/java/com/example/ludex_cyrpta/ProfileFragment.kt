@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment() {
     //standard function to create the fragment
@@ -22,6 +24,12 @@ class ProfileFragment : Fragment() {
     //things that happen in the "Profile" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val logoutBtn: Button = view.findViewById(R.id.logoutBtn)
+
+        logoutBtn.setOnClickListener {
+            logout()
+        }
     }
 
     //necessary for initializing in MainActivity
@@ -29,5 +37,24 @@ class ProfileFragment : Fragment() {
         fun newInstance(): ProfileFragment {
             return ProfileFragment()
         }
+    }
+    private fun logout() {
+        // --- Sign out from Firebase ---
+        FirebaseAuth.getInstance().signOut()
+
+        // --- Clear all fragments from back stack ---
+        parentFragmentManager.popBackStack(
+            null,
+            androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
+
+        // --- Navigate to LoginFragment ---
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.mainScreen, LoginFragment())
+            .commit()
+
+        // --- Hide bottom navigation ---
+        val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
+        bottomNav.menu.setGroupVisible(0, false)
     }
 }

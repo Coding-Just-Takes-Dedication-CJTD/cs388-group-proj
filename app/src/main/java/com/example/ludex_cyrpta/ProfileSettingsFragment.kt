@@ -35,13 +35,6 @@ class ProfileSettingsFragment : Fragment() {
         val tabLayout = view.findViewById<TabLayout>(R.id.psTabLayout)
         val viewPager = view.findViewById<ViewPager2>(R.id.psViewPager)
 
-
-        val logoutBtn: Button = view.findViewById(R.id.logoutBtn)
-
-        logoutBtn.setOnClickListener {
-            logout()
-        }
-
         //setup viewpager2 adapter so that both fragments can appear in 1 page within their respective tabs
         val psPagerAdapter = ProfileSettingsPagerAdapter(this)
         viewPager.adapter = psPagerAdapter
@@ -60,25 +53,6 @@ class ProfileSettingsFragment : Fragment() {
         fun newInstance(): ProfileSettingsFragment {
             return ProfileSettingsFragment()
         }
-    }
-    private fun logout() {
-        // --- Sign out from Firebase ---
-        FirebaseAuth.getInstance().signOut()
-
-        // --- Clear all fragments from back stack ---
-        parentFragmentManager.popBackStack(
-            null,
-            androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-
-        // --- Navigate to LoginFragment ---
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.mainScreen, LoginFragment())
-            .commit()
-
-        // --- Hide bottom navigation ---
-        val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
-        bottomNav.menu.setGroupVisible(0, false)
     }
 
 }
