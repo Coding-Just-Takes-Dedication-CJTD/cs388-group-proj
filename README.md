@@ -215,4 +215,4 @@ List any pending user stories / any user stories you decided to cut from the ori
 
 ## App Demo Video
 
-- Embed the YouTube/Vimeo link of your Completed Demo Day prep video
+- [YouTube Video of Demo](https://youtu.be/4Zok8xsI_kU)
