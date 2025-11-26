@@ -211,6 +211,7 @@ List any pending user stories / any user stories you decided to cut from the ori
 [Add video/gif of your current application that shows build progress]
 **GIF:**
 <img src="https://github.com/Coding-Just-Takes-Dedication-CJTD/cs388-group-proj/blob/main/login_testing.gif" width=600>
+<img src = "https://github.com/Coding-Just-Takes-Dedication-CJTD/cs388-group-proj/blob/main/login_testing_push_notiftest_1.gif" width=600>
 
 ## App Demo Video
 
