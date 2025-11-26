@@ -18,13 +18,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.198"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.036" />
+        app:layout_constraintTop_toBottomOf="@id/logoutBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/profileContentPlacehldr"
         android:layout_width="370dp"
-        android:layout_height="600dp"
+        android:layout_height="550dp"
         android:background="@drawable/placeholder_bg"
         android:gravity="center_horizontal|top"
         android:text="Profile Content (placeholder)"
@@ -36,5 +36,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilePageHdr"
         app:layout_constraintVertical_bias="0.275" />
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="120dp"
+        android:layout_height="64dp"
+        app:cornerRadius="0dp"
+        android:text="Logout"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
