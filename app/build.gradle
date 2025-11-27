@@ -4,6 +4,9 @@ plugins {
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+
+    //new with firebase
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -54,4 +57,15 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'androidx.fragment:fragment-ktx:1.5.0'
+
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:33.5.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth-ktx:23.2.1'
+
+    // Firebase Auth
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Firestore
+    implementation 'com.google.firebase:firebase-firestore'
 }
