@@ -3,7 +3,7 @@ package com.example.ludex_cyrpta
 data class Game(
     val id: Int, //unique id pulled from API request; tied to API Game field "id"
     val name: String, // ✅ game name; i.e. "Doom"; tied to API Game field "name"
-    val rating: Double = 0.0, // ✅ total game rating; tied to API Game field "total_rating"; TODO: round this to 1 decimal place in the adapter
+    val rating: Double = 0.0, // ✅ total game rating; tied to API Game field "total_rating";
     val imageLink: String, //link to game poster; tied to API Game field "cover.image_id"
     val genreTag: List<String>, // ✅ game's genres; tied to API Game field "genres.name"
     val themeTag: List<String>, //game's themes; tied to API Game field "themes.name"
