@@ -1,6 +1,7 @@
 package com.example.ludex_cyrpta
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -9,10 +10,25 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity() {
+private const val TAG = "MainActivity"
+
+class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     private var actvFrag: Fragment? = null
     private lateinit var auth: FirebaseAuth
+
+    // --- Fragments ---
+    private lateinit var loginFrag: LoginFragment
+    private lateinit var registerFrag: RegisterFragment
+    private lateinit var homeFrag: HomeFragment
+    private lateinit var vwFrag: VaultWishlistFragment
+    private lateinit var searchFrag: SearchFragment
+    private lateinit var trendingFrag: TrendingFragment
+    private lateinit var psFrag: ProfileSettingsFragment
+    private lateinit var profFrag: ProfileFragment
+    private lateinit var setFrag: SettingsFragment
+    private lateinit var gvFrag: GameVaultFragment
+    private lateinit var wishFrag: WishlistFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,21 +44,20 @@ class MainActivity : AppCompatActivity() {
 
         val fragMngr: FragmentManager = supportFragmentManager
 
-        // --- Fragments ---
-        val loginFrag = LoginFragment()
-        val registerFrag = RegisterFragment()
 
-        val homeFrag = HomeFragment()
-        val vwFrag = VaultWishlistFragment()
-        val searchFrag = SearchFragment()
-        val trendingFrag = TrendingFragment()
-        val psFrag = ProfileSettingsFragment()
+        loginFrag = LoginFragment()
+        registerFrag = RegisterFragment()
 
-        val salesFrag = OnSaleFragment()
-        val profFrag = ProfileFragment()
-        val setFrag = SettingsFragment()
-        val gvFrag = GameVaultFragment()
-        val wishFrag = WishlistFragment()
+        homeFrag = HomeFragment()
+        vwFrag = VaultWishlistFragment()
+        searchFrag = SearchFragment()
+        trendingFrag = TrendingFragment()
+        psFrag = ProfileSettingsFragment()
+
+        profFrag = ProfileFragment()
+        setFrag = SettingsFragment()
+        gvFrag = GameVaultFragment()
+        wishFrag = WishlistFragment()
 
         // --- Add & hide all fragments (only once) ---
         if (savedInstanceState == null) {
@@ -56,7 +71,6 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.mainScreen, setFrag, "SETTINGS").hide(setFrag)
                 .add(R.id.mainScreen, profFrag, "PROFILE").hide(profFrag)
                 .add(R.id.mainScreen, psFrag, "PROFILE_SETTINGS").hide(psFrag)
-                .add(R.id.mainScreen, salesFrag, "SALES").hide(salesFrag)
                 .add(R.id.mainScreen, trendingFrag, "TRENDS").hide(trendingFrag)
                 .add(R.id.mainScreen, searchFrag, "SEARCH").hide(searchFrag)
                 .add(R.id.mainScreen, vwFrag, "VAULT_WISH").hide(vwFrag)
@@ -102,5 +116,18 @@ class MainActivity : AppCompatActivity() {
         fragTrnsctn.show(newFrag)
         fragTrnsctn.commit()
         actvFrag = newFrag
+    }
+
+    override fun onGameSelected(game: Game) {
+        Log.d(TAG, "Game: ${game.name} has been selected...\nGoing to details page...")
+
+        val detailsFrag = GameDetailsFragment.newInstance(game.name)
+        val fragTransaction = supportFragmentManager.beginTransaction()
+        actvFrag?.let { fragTransaction.hide(it) }
+        fragTransaction.add(R.id.mainScreen, detailsFrag, "GAME_DETAILS_${game.name.hashCode()}")
+        fragTransaction.addToBackStack(null)
+        fragTransaction.commit()
+
+        actvFrag = detailsFrag
     }
 }

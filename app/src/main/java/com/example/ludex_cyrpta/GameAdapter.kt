@@ -5,88 +5,66 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.DiffUtil
+import java.util.Locale
 
-/* UPDATED VERSION
 class GameAdapter(
-    private val games: List<Game>,
-    private val gListener: OnListFragmentInteractionListener?
-): RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
+    private val onItemClicked: (Game) -> Unit
+) : ListAdapter<Game, GameAdapter.GameViewHolder>(GameDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.game_vault_screen_frag, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.game_rv_item, parent, false)
         return GameViewHolder(view)
     }
 
     inner class GameViewHolder(val gView: View) : RecyclerView.ViewHolder(gView) {
-        var gItem: Game? = null
-        val gameName: TextView = gView.findViewById(R.id.name)
-        val gameDescr: TextView = gView.findViewById(R.id.descr)
-        val gamePrice: TextView = gView.findViewById(R.id.price)
         val gameImage: ImageView = gView.findViewById(R.id.image)
+        val gameName: TextView = gView.findViewById(R.id.name)
+        val gameRating: TextView = gView.findViewById(R.id.rating)
+        val gameDebutDate: TextView = gView.findViewById(R.id.releaseDate)
+        val gameStory: TextView = gView.findViewById(R.id.storySummary)
 
-        override fun toString(): String {
-            return gameName.toString() + " '" + gameDescr.text + "'"
-        }
-    }
-
-    override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val game = games[position]
-
-        holder.gItem = game
-        holder.gameName.text = game.name
-        holder.gamePrice.text = game.price
-        holder.gameDescr.text = game.descr
-
-        val imageURL = game.imageLink
-        Glide.with(holder.gView)
-            .load(imageURL)
-            .centerInside()
-            .into(holder.gameImage)
-
-        holder.gView.setOnClickListener {
-            holder.gItem?.let { game ->
-                gListener?.onItemClick(game)
+        init {
+            gView.setOnClickListener {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) onItemClicked(getItem(bindingAdapterPosition))
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return games.size
-    }
-}
- */
-
-class GameAdapter(private val games: List<Game>) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
-        val context = parent.context
-        val inflater = LayoutInflater.from(context)
-        val contactView = inflater.inflate(R.layout.game_rv_item, parent, false)
-        return GameViewHolder(contactView)
-    }
-
-    inner class GameViewHolder(val gView: View) : RecyclerView.ViewHolder(gView) {
-        val gameName: TextView = gView.findViewById(R.id.name)
-        val gameDescr: TextView = gView.findViewById(R.id.descr)
-        val gamePrice: TextView = gView.findViewById(R.id.price)
-        val gameImage: ImageView = gView.findViewById(R.id.image)
-    }
-
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val game = games.get(position)
+        val game = getItem(position)
         holder.gameName.text = game.name
-        holder.gamePrice.text = game.price
-        holder.gameDescr.text = game.descr
+        holder.gameRating.text = game.rating.toString() //gameRating was already specified in GameViewModel
+        holder.gameStory.text = game.synopsis
+        holder.gameDebutDate.text = game.releaseDate
 
         val imageURL = game.imageLink
-        Glide.with(holder.gView)
-            .load(imageURL)
-            .centerInside()
-            .into(holder.gameImage)
+        val imagePlaceholder = android.R.drawable.ic_menu_gallery //placeholder if link doesn't work or is empty
+
+        val glideContext = Glide.with(holder.gView.context) //make it external to make the if/else statement more efficient
+        val glideReq = if (imageURL.isNotEmpty()) {
+            glideContext
+                .load(imageURL)
+                .centerCrop()
+                .placeholder(imagePlaceholder)
+                .error(imagePlaceholder) //if there's an error, use placeholder
+        } else {
+            glideContext
+                .load(imagePlaceholder)
+                .centerCrop()
+        }
+        glideReq.into(holder.gameImage)
+    }
+}
+
+class GameDiffCallback : DiffUtil.ItemCallback<Game>() {
+    override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun getItemCount(): Int {
-        return games.size
+    override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
+        return oldItem == newItem
     }
 }
