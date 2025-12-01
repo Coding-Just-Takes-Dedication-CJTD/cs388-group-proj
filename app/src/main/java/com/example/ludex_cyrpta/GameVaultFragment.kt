@@ -10,43 +10,37 @@ import androidx.recyclerview.widget.RecyclerView
 
 private lateinit var games: List<Game>
 
-class GameVaultFragment : Fragment() {
-    //standard function to create the fragment
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+// Add the interface implementation to the class signature
+class GameVaultFragment : Fragment(), OnListFragmentInteractionListener {
 
-    //standard function to call the layout from the .xml file of the fragment
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInflater: Bundle?): View? {
-        val view = inflater.inflate(R.layout.game_vault_screen, container, false)
-        return view
-    }
+    // ... onCreate and onCreateView stay the same ...
 
-    //standard function to populate the fragment with the layout from the .xml file of the fragment
-    //things that happen in the "Game Vault" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //reference the RecyclerView
         val gamesRV = view.findViewById<RecyclerView>(R.id.gameList)
+        games = GameFetcher.getGames() // Your data source
 
-        //get the list of games
-        games = GameFetcher.getGames()
+        // Pass 'this' as the listener
+        val adapter = GameAdapter(games, this)
 
-        //create the adapter
-        val adapter = GameAdapter(games)
-
-        //attach the adapter to the RecyclerView to populate items
         gamesRV.adapter = adapter
-
-        //set layout manager to position the items
         gamesRV.layoutManager = LinearLayoutManager(view.context)
     }
 
-    //necessary for initializing in MainActivity
+    // Handle the click event from the Adapter
+    override fun onItemClick(item: Game) {
+        // Create the details fragment with the clicked game
+        val detailsFrag = GameDetailsFragment.newInstance(item)
+
+        // Use the MainActivity's swapFrag function if available, or manual transaction
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mainScreen, detailsFrag) // Ensure R.id.mainScreen matches your activity_main.xml container
+            .addToBackStack(null) // Allows user to press Back button to return to list
+            .commit()
+    }
+
     companion object {
-        fun newInstance(): GameVaultFragment {
-            return GameVaultFragment()
-        }
+        fun newInstance(): GameVaultFragment = GameVaultFragment()
     }
 }

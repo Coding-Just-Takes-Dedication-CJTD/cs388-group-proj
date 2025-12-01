@@ -8,85 +8,50 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-/* UPDATED VERSION
 class GameAdapter(
     private val games: List<Game>,
-    private val gListener: OnListFragmentInteractionListener?
-): RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
+    private val listener: OnListFragmentInteractionListener? // 1. Added Listener here
+) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.game_vault_screen_frag, parent, false)
-        return GameViewHolder(view)
-    }
-
-    inner class GameViewHolder(val gView: View) : RecyclerView.ViewHolder(gView) {
-        var gItem: Game? = null
-        val gameName: TextView = gView.findViewById(R.id.name)
-        val gameDescr: TextView = gView.findViewById(R.id.descr)
-        val gamePrice: TextView = gView.findViewById(R.id.price)
-        val gameImage: ImageView = gView.findViewById(R.id.image)
-
-        override fun toString(): String {
-            return gameName.toString() + " '" + gameDescr.text + "'"
-        }
+        val context = parent.context
+        val inflater = LayoutInflater.from(context)
+        // Ensure this matches your XML file name for the row item
+        val contactView = inflater.inflate(R.layout.game_rv_item, parent, false)
+        return GameViewHolder(contactView)
     }
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         val game = games[position]
 
-        holder.gItem = game
+        // Set text views
         holder.gameName.text = game.name
-        holder.gamePrice.text = game.price
         holder.gameDescr.text = game.descr
+        // If your Game object doesn't have a price field, you might want to remove this line
+        // or add a price field to your Game data class.
+        // holder.gamePrice.text = game.price
 
-        val imageURL = game.imageLink
-        Glide.with(holder.gView)
-            .load(imageURL)
-            .centerInside()
+        // Load image using Glide
+        Glide.with(holder.itemView.context)
+            .load(game.imageLink)
+            .placeholder(R.drawable.ic_launcher_background) // Add a placeholder if you have one
             .into(holder.gameImage)
 
-        holder.gView.setOnClickListener {
-            holder.gItem?.let { game ->
-                gListener?.onItemClick(game)
-            }
+        // 2. Set the click listener on the entire row
+        holder.itemView.setOnClickListener {
+            listener?.onItemClick(game)
         }
     }
 
     override fun getItemCount(): Int {
         return games.size
     }
-}
- */
 
-class GameAdapter(private val games: List<Game>) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
-        val context = parent.context
-        val inflater = LayoutInflater.from(context)
-        val contactView = inflater.inflate(R.layout.game_rv_item, parent, false)
-        return GameViewHolder(contactView)
-    }
-
-    inner class GameViewHolder(val gView: View) : RecyclerView.ViewHolder(gView) {
-        val gameName: TextView = gView.findViewById(R.id.name)
-        val gameDescr: TextView = gView.findViewById(R.id.descr)
-        val gamePrice: TextView = gView.findViewById(R.id.price)
-        val gameImage: ImageView = gView.findViewById(R.id.image)
-    }
-
-    override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val game = games.get(position)
-        holder.gameName.text = game.name
-        holder.gamePrice.text = game.price
-        holder.gameDescr.text = game.descr
-
-        val imageURL = game.imageLink
-        Glide.with(holder.gView)
-            .load(imageURL)
-            .centerInside()
-            .into(holder.gameImage)
-    }
-
-    override fun getItemCount(): Int {
-        return games.size
+    // Inner ViewHolder class
+    inner class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val gameName: TextView = itemView.findViewById(R.id.name)
+        val gameDescr: TextView = itemView.findViewById(R.id.descr)
+        val gamePrice: TextView = itemView.findViewById(R.id.price)
+        val gameImage: ImageView = itemView.findViewById(R.id.image)
     }
 }

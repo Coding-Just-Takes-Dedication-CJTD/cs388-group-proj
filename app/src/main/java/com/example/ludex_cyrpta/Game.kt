@@ -1,23 +1,49 @@
 package com.example.ludex_cyrpta
 
-class Game(val name: String, val price: String, val imageLink: String, val tags: MutableList<String>, val trailerLink: String, val descr: String, val listBelong: MutableMap<String, Int>, val onSale: Boolean, val trending: Boolean) {
-    /*
-    name -> game name; i.e. "Doom"
-    price -> game price; i.e. $19.99; if 0.00, assign value "Free"
-    imageLink -> link to game poster
-    tags -> game classification: TODO: finish these classifications
-        {   Genre: action, adventure, strategy, puzzle, role-playing, simulation, etc;
-            Mechanics: open-world, stealth, survival, combat, crafting, building, racing, etc;
-            Theme: fantasy, sci-fi, horror, historical, superheroes, etc;
-            Player Count: single-player, multiplayer, co-op, competitive, etc;
-            Platform: PC, Playstation, Xbox, Nintendo Switch, Mobile, VR, etc;
-            Launcher: Steam, EPIC, Ubisoft, Xbox, EA, etc
-            ...
-        }
-    trailerLink -> link to trailer; i.e. https://youtu.be/QdBZY2fkU-0 (GTA 6 Trailer 1)
-    descr -> game description; "A Game"
-    listBelong -> list game belongs to; key is list name (GameVault, WishList, Favorites) and value is position on the list (1, 2, 3, ...)
-    onSale -> is the game on sale? TRUE or FALSE
-    trending -> is the game trending? TRUE or FALSE
-     */
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.io.Serializable
+
+// 1. Add Entity annotation
+// 2. Add PrimaryKey annotation to 'id'
+@Entity(tableName = "games_table")
+data class Game(
+    @PrimaryKey val id: Int,
+    val name: String,
+    val rating: Double = 0.0,
+    val imageLink: String,
+    val genreTag: List<String> = emptyList(),
+    val themeTag: List<String> = emptyList(),
+    val gameModeTag: List<String> = emptyList(),
+    val platformTag: List<String> = emptyList(),
+    val otherServicesTag: List<String> = emptyList(),
+    val releaseDate: String,
+    val trailerLink: String,
+    val descr: String,
+    val synopsis: String,
+    val listBelong: Map<String, Int> = emptyMap(),
+    val trending: Boolean,
+    val website: String
+): Serializable {
+    // Existing toMap function stays exactly the same
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "id" to id,
+            "name" to name,
+            "rating" to rating,
+            "imageLink" to imageLink,
+            "genreTag" to genreTag,
+            "themeTag" to themeTag,
+            "gameModeTag" to gameModeTag,
+            "platformTag" to platformTag,
+            "otherServicesTag" to otherServicesTag,
+            "releaseDate" to releaseDate,
+            "trailerLink" to trailerLink,
+            "descr" to descr,
+            "synopsis" to synopsis,
+            "listBelong" to listBelong,
+            "trending" to trending,
+            "website" to website
+        )
+    }
 }

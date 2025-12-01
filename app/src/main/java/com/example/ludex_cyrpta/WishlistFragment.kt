@@ -4,49 +4,65 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope // Required for database coroutines
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 
-private lateinit var wishedGames: List<Game>
+// 1. Implement the listener interface so we can handle clicks
+class WishlistFragment : Fragment(), OnListFragmentInteractionListener {
 
-class WishlistFragment : Fragment() {
-    //standard function to create the fragment
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private lateinit var gamesRV: RecyclerView
+    private var wishedGames: List<Game> = emptyList() // Move variable inside class
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        // Ensure this layout exists (R.layout.wishlist_screen)
+        return inflater.inflate(R.layout.wishlist_screen, container, false)
     }
 
-    //standard function to call the layout from the .xml file of the fragment
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInflater: Bundle?): View? {
-        val view = inflater.inflate(R.layout.wishlist_screen, container, false)
-        return view
-    }
-
-    //standard function to populate the fragment with the layout from the .xml file of the fragment
-    //things that happen in the "Wishlist" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //reference the RecyclerView
-        val gamesRV = view.findViewById<RecyclerView>(R.id.wishList)
-
-        //get the list of games
-        wishedGames = GameFetcher.getGames()
-
-        //create the adapter
-        val adapter = GameAdapter(wishedGames)
-
-        //attach the adapter to the RecyclerView to populate items
-        gamesRV.adapter = adapter
-
-        //set layout manager to position the items
+        gamesRV = view.findViewById(R.id.wishList)
         gamesRV.layoutManager = LinearLayoutManager(view.context)
+
+        // 2. Load the data from the Database (Room) instead of GameFetcher
+        loadWishlistFromDatabase()
     }
 
-    //necessary for initializing in MainActivity
-    companion object {
-        fun newInstance(): WishlistFragment {
-            return WishlistFragment()
+    private fun loadWishlistFromDatabase() {
+        // We must launch a coroutine because database access cannot be on the main thread
+        lifecycleScope.launch {
+            val database = AppDatabase.getDatabase(requireContext())
+
+            // Get the list of saved games
+            wishedGames = database.gameDao().getAllGames()
+
+            // 3. Setup Adapter with the saved games AND 'this' as the listener
+            val adapter = GameAdapter(wishedGames, this@WishlistFragment)
+            gamesRV.adapter = adapter
+
+            // Optional: Show a message if list is empty
+            if (wishedGames.isEmpty()) {
+                // You might want to handle an empty state here (e.g., show a TextView saying "No games saved")
+            }
         }
+    }
+
+    // 4. Handle what happens when a user clicks a game in the wishlist
+    override fun onItemClick(item: Game) {
+        // Navigate to details (reuse the Fragment we made earlier)
+        val detailsFrag = GameDetailsFragment.newInstance(item)
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mainScreen, detailsFrag)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    companion object {
+        fun newInstance(): WishlistFragment = WishlistFragment()
     }
 }

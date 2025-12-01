@@ -71,5 +71,10 @@ dependencies {
 
     // Firestore
     implementation 'com.google.firebase:firebase-firestore'
+    implementation libs.firebase.firestore.ktx
+
+
+    // Gson (for converting Lists/Maps to JSON strings for Room)
+    implementation 'com.google.code.gson:gson:2.10.1'
 
 }
