@@ -195,11 +195,10 @@ class GameDetailsFragment : Fragment() {
     // Companion object for creating the fragment instance with arguments
     companion object {
         const val ARG_GAME_NAME = "ARG_GAME_NAME" // Define constant for argument key
-        fun newInstance(gameName: String) =
-            GameDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_GAME_NAME, gameName)
-                }
+        fun newInstance(gameName: String) = GameDetailsFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_GAME_NAME, gameName)
             }
+        }
     }
 }
