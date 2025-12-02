@@ -43,7 +43,6 @@ class HomeFragment : Fragment() {
 
         // Find the "boxes"
         val trendingBox = view.findViewById<View>(R.id.trendPlacehldr)
-        val salesBox = view.findViewById<View>(R.id.salePlacehldr)
         val vaultBox = view.findViewById<View>(R.id.gvPlacehldr)
         val searchBar = view.findViewById<SearchView>(R.id.searchView)
         val act = activity as MainActivity
@@ -53,13 +52,6 @@ class HomeFragment : Fragment() {
         trendingBox.setOnClickListener {
             val act = activity as MainActivity
             val frag = act.supportFragmentManager.findFragmentByTag("TRENDS")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.trendingPage
-        }
-
-        salesBox.setOnClickListener {
-            val act = activity as MainActivity
-            val frag = act.supportFragmentManager.findFragmentByTag("SALES")
             act.swapFrag(frag!!)
             bottomNav.selectedItemId = R.id.trendingPage
         }

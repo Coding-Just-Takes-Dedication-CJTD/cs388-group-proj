@@ -8,14 +8,15 @@
 
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="360dp"
+        android:layout_width="370dp"
         android:layout_height="50dp"
         android:background="@drawable/search_view_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homePageHdr"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintVertical_bias="0.015" />
 
     <TextView
         android:id="@+id/homePageHdr"
@@ -35,7 +36,7 @@
     <TextView
         android:id="@+id/trendPlacehldr"
         android:layout_width="370dp"
-        android:layout_height="150dp"
+        android:layout_height="230dp"
         android:background="@drawable/placeholder_bg"
         android:gravity="center_horizontal|top"
         android:text="Trending (placeholder)"
@@ -43,31 +44,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.634"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintVertical_bias="0.037" />
-
-    <TextView
-        android:id="@+id/salePlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="150dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="On Sale (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendPlacehldr"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintVertical_bias="0.065" />
 
     <TextView
         android:id="@+id/gvPlacehldr"
         android:layout_width="370dp"
-        android:layout_height="150dp"
+        android:layout_height="280dp"
         android:background="@drawable/placeholder_bg"
         android:gravity="center_horizontal|top"
         android:text="Game Vault (placeholder)"
@@ -75,9 +60,9 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/salePlacehldr"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintTop_toBottomOf="@+id/trendPlacehldr"
+        app:layout_constraintVertical_bias="0.396" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

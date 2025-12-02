@@ -2,6 +2,7 @@ package com.example.ludex_cyrpta
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     private var actvFrag: Fragment? = null
     private lateinit var auth: FirebaseAuth
+    private lateinit var bottomNav: BottomNavigationView
 
     // --- Fragments ---
     private lateinit var loginFrag: LoginFragment
@@ -59,6 +61,8 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         gvFrag = GameVaultFragment()
         wishFrag = WishlistFragment()
 
+        bottomNav = findViewById(R.id.bottomNav)
+
         // --- Add & hide all fragments (only once) ---
         if (savedInstanceState == null) {
             val fragTransaction = fragMngr.beginTransaction()
@@ -82,16 +86,41 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             actvFrag = if (currentUser == null) {
                 // Show login fragment
                 fragMngr.beginTransaction().show(loginFrag).commit()
+                bottomNav.visibility = View.GONE
                 loginFrag
             } else {
                 // Show home fragment
                 fragMngr.beginTransaction().show(homeFrag).commit()
+                bottomNav.visibility = View.VISIBLE
                 homeFrag
+            }
+        } else { //else find currently visible fragment
+            actvFrag = fragMngr.fragments.lastOrNull() { it.isVisible }
+
+            val isMainFrag = actvFrag is HomeFragment || actvFrag is SearchFragment ||
+                             actvFrag is TrendingFragment || actvFrag is VaultWishlistFragment ||
+                             actvFrag is ProfileSettingsFragment
+            bottomNav.visibility = if (isMainFrag) View.VISIBLE else View.GONE
+        }
+
+        //ensures clicking the back button does the correct navigation
+        // (and that bottom Nav is only visible on main pages)
+        fragMngr.addOnBackStackChangedListener {
+            val currFrag = fragMngr.fragments.lastOrNull { it.isVisible }
+            actvFrag = currFrag
+
+            val isMainFrag = currFrag is HomeFragment || currFrag is SearchFragment ||
+                             currFrag is TrendingFragment || currFrag is VaultWishlistFragment ||
+                             currFrag is ProfileSettingsFragment
+
+            if (isMainFrag) {
+                bottomNav.visibility = View.VISIBLE
+            } else {
+                bottomNav.visibility = View.GONE
             }
         }
 
         // --- Bottom Navigation ---
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
             val newFrag: Fragment = when (item.itemId) {
                 R.id.homePage -> homeFrag
@@ -111,6 +140,8 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     // --- Swap fragments cleanly ---
     fun swapFrag(newFrag: Fragment) {
+        if (newFrag == actvFrag) return //to not swap with self
+
         val fragTrnsctn = supportFragmentManager.beginTransaction()
         actvFrag?.let { fragTrnsctn.hide(it) }
         fragTrnsctn.show(newFrag)
@@ -120,6 +151,8 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     override fun onGameSelected(game: Game) {
         Log.d(TAG, "Game: ${game.name} has been selected...\nGoing to details page...")
+
+        bottomNav.visibility = View.GONE
 
         val detailsFrag = GameDetailsFragment.newInstance(game.name)
         val fragTransaction = supportFragmentManager.beginTransaction()

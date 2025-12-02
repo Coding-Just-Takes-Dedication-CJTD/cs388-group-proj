@@ -13,6 +13,7 @@ import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -155,11 +156,17 @@ class GameDetailsFragment : Fragment() {
                     trailerVid.loadUrl(game.trailerLink)
                     trailerVid.visibility = View.VISIBLE
                 } else {
+                    val vidLayout = trailerVid.layoutParams as ConstraintLayout.LayoutParams
+                    vidLayout.verticalBias = 0.toFloat()
                     trailerVid.visibility = View.GONE
                 }
 
                 //hide progress bar & clear lingering errors
                 errorMsg.visibility = View.GONE
+                progBar.visibility = View.GONE
+            } else if (viewModel.isLoading.value == false) {
+                errorMsg.text = "Game details couldn't be loaded or found."
+                errorMsg.visibility = View.VISIBLE
                 progBar.visibility = View.GONE
             }
         })
