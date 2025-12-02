@@ -1,6 +1,7 @@
 package com.example.ludex_cyrpta
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+
+private const val TAG = "HomeFragment"
 
 class HomeFragment : Fragment() {
 
@@ -52,23 +55,43 @@ class HomeFragment : Fragment() {
         trendingBox.setOnClickListener {
             val act = activity as MainActivity
             val frag = act.supportFragmentManager.findFragmentByTag("TRENDS")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.trendingPage
+
+            frag?.let {
+                act.swapFrag(it)
+                bottomNav.selectedItemId = R.id.trendingPage
+                Log.d(TAG, "Swapped to TrendingFragment successfully!")
+            } ?: run {
+                // Optionally, log an error if the fragment wasn't found
+                Log.e(TAG, "TrendingFragment not found with tag TRENDS")
+            }
         }
 
         vaultBox.setOnClickListener {
             val act = activity as MainActivity
-            val frag = act.supportFragmentManager.findFragmentByTag("GAME_VAULT")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.vault_wishlistPage
+            val frag = act.supportFragmentManager.findFragmentByTag("VAULT_WISH")
+
+            frag?.let {
+                act.swapFrag(it)
+                bottomNav.selectedItemId = R.id.vault_wishlistPage
+                Log.d(TAG, "Swapped to VaultWishlistFragment successfully!")
+            } ?: run {
+                // Optionally, log an error if the fragment wasn't found
+                Log.e(TAG, "VaultWishlistFragment not found with tag VAULT_WISH")
+            }
         }
 
         searchBar.setOnClickListener {
             val act = activity as MainActivity
             val frag = act.supportFragmentManager.findFragmentByTag("SEARCH")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.searchPage
 
+            frag?.let {
+                act.swapFrag(it)
+                bottomNav.selectedItemId = R.id.searchPage
+                Log.d(TAG, "Swapped to SearchFragment successfully!")
+            } ?: run {
+                // Optionally, log an error if the fragment wasn't found
+                Log.e(TAG, "SearchFragment not found with tag SEARCH")
+            }
         }
     }
     override fun onResume() {
