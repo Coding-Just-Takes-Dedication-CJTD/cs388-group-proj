@@ -13,25 +13,27 @@
         android:text="Game Vault"
         android:textSize="40dp"
         android:textStyle="bold"
-        app:flow_verticalBias="0"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.05" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gameList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layoutManager="LinearLayoutManager"
+    <TextView
+        android:id="@+id/vaultContentPlacehldr"
+        android:layout_width="370dp"
+        android:layout_height="580dp"
+        android:background="@drawable/placeholder_bg"
+        android:gravity="center_horizontal|top"
+        android:text="Vault Content (placeholder)"
+        android:textSize="20dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gvTitle"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/game_rv_item" />
+        app:layout_constraintTop_toBottomOf="@+id/gvTitle"
+        app:layout_constraintVertical_bias="0.1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

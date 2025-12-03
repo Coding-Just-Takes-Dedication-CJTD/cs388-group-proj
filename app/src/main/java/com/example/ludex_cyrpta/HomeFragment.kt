@@ -1,6 +1,7 @@
 package com.example.ludex_cyrpta
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,11 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
-class HomeFragment : Fragment() {
+private const val TAG = "HomeFragment"
 
+class HomeFragment : Fragment() {
     private var greetingTextView: TextView? = null
+
     //standard function to create the fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +37,7 @@ class HomeFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         greetingTextView.text = if (currentUser != null) {
             val email = currentUser.email ?: "user"
-            // Optional: show only name part before @
-            val username = email.substringBefore("@")
+            val username = email.substringBefore("@") //show only username from email
             "Hello $username!"
         } else {
             "Hello user!"
@@ -43,7 +45,6 @@ class HomeFragment : Fragment() {
 
         // Find the "boxes"
         val trendingBox = view.findViewById<View>(R.id.trendPlacehldr)
-        val salesBox = view.findViewById<View>(R.id.salePlacehldr)
         val vaultBox = view.findViewById<View>(R.id.gvPlacehldr)
         val searchBar = view.findViewById<SearchView>(R.id.searchView)
         val act = activity as MainActivity
@@ -51,32 +52,39 @@ class HomeFragment : Fragment() {
 
         // When clicked → tell MainActivity to swap fragments
         trendingBox.setOnClickListener {
-            val act = activity as MainActivity
             val frag = act.supportFragmentManager.findFragmentByTag("TRENDS")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.trendingPage
-        }
 
-        salesBox.setOnClickListener {
-            val act = activity as MainActivity
-            val frag = act.supportFragmentManager.findFragmentByTag("SALES")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.trendingPage
+            frag?.let {
+                act.swapFrag(it)
+                bottomNav.selectedItemId = R.id.trendingPage
+                Log.d(TAG, "Swapped to TrendingFragment successfully!")
+            } ?: run {
+                Log.e(TAG, "TrendingFragment not found with tag TRENDS")
+            }
         }
 
         vaultBox.setOnClickListener {
-            val act = activity as MainActivity
-            val frag = act.supportFragmentManager.findFragmentByTag("GAME_VAULT")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.vault_wishlistPage
+            val frag = act.supportFragmentManager.findFragmentByTag("VAULT_WISH")
+
+            frag?.let {
+                act.swapFrag(it)
+                bottomNav.selectedItemId = R.id.vault_wishlistPage
+                Log.d(TAG, "Swapped to VaultWishlistFragment successfully!")
+            } ?: run {
+                Log.e(TAG, "VaultWishlistFragment not found with tag VAULT_WISH")
+            }
         }
 
         searchBar.setOnClickListener {
-            val act = activity as MainActivity
             val frag = act.supportFragmentManager.findFragmentByTag("SEARCH")
-            act.swapFrag(frag!!)
-            bottomNav.selectedItemId = R.id.searchPage
 
+            frag?.let {
+                act.swapFrag(it)
+                bottomNav.selectedItemId = R.id.searchPage
+                Log.d(TAG, "Swapped to SearchFragment successfully!")
+            } ?: run {
+                Log.e(TAG, "SearchFragment not found with tag SEARCH")
+            }
         }
     }
     override fun onResume() {

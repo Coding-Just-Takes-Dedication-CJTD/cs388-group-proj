@@ -26,21 +26,6 @@ class WishlistFragment : Fragment() {
     //things that happen in the "Wishlist" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //reference the RecyclerView
-        val gamesRV = view.findViewById<RecyclerView>(R.id.wishList)
-
-        //get the list of games
-        wishedGames = GameFetcher.getGames()
-
-        //create the adapter
-        val adapter = GameAdapter(wishedGames)
-
-        //attach the adapter to the RecyclerView to populate items
-        gamesRV.adapter = adapter
-
-        //set layout manager to position the items
-        gamesRV.layoutManager = LinearLayoutManager(view.context)
     }
 
     //necessary for initializing in MainActivity

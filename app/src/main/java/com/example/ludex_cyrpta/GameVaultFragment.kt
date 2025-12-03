@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
-private lateinit var games: List<Game>
+private const val TAG = "GameVaultFragment"
 
 class GameVaultFragment : Fragment() {
     //standard function to create the fragment
@@ -17,7 +15,7 @@ class GameVaultFragment : Fragment() {
     }
 
     //standard function to call the layout from the .xml file of the fragment
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInflater: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.game_vault_screen, container, false)
         return view
     }
@@ -26,21 +24,6 @@ class GameVaultFragment : Fragment() {
     //things that happen in the "Game Vault" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //reference the RecyclerView
-        val gamesRV = view.findViewById<RecyclerView>(R.id.gameList)
-
-        //get the list of games
-        games = GameFetcher.getGames()
-
-        //create the adapter
-        val adapter = GameAdapter(games)
-
-        //attach the adapter to the RecyclerView to populate items
-        gamesRV.adapter = adapter
-
-        //set layout manager to position the items
-        gamesRV.layoutManager = LinearLayoutManager(view.context)
     }
 
     //necessary for initializing in MainActivity

@@ -1,6 +1,8 @@
 package com.example.ludex_cyrpta
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -9,10 +11,26 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity() {
+private const val TAG = "MainActivity"
+
+class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     private var actvFrag: Fragment? = null
     private lateinit var auth: FirebaseAuth
+    private lateinit var bottomNav: BottomNavigationView
+
+    // --- Fragments ---
+    private lateinit var loginFrag: LoginFragment
+    private lateinit var registerFrag: RegisterFragment
+    private lateinit var homeFrag: HomeFragment
+    private lateinit var vwFrag: VaultWishlistFragment
+    private lateinit var searchFrag: SearchFragment
+    private lateinit var trendingFrag: TrendingFragment
+    private lateinit var psFrag: ProfileSettingsFragment
+    private lateinit var profFrag: ProfileFragment
+    private lateinit var setFrag: SettingsFragment
+    private lateinit var gvFrag: GameVaultFragment
+    private lateinit var wishFrag: WishlistFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,21 +46,22 @@ class MainActivity : AppCompatActivity() {
 
         val fragMngr: FragmentManager = supportFragmentManager
 
-        // --- Fragments ---
-        val loginFrag = LoginFragment()
-        val registerFrag = RegisterFragment()
 
-        val homeFrag = HomeFragment()
-        val vwFrag = VaultWishlistFragment()
-        val searchFrag = SearchFragment()
-        val trendingFrag = TrendingFragment()
-        val psFrag = ProfileSettingsFragment()
+        loginFrag = LoginFragment()
+        registerFrag = RegisterFragment()
 
-        val salesFrag = OnSaleFragment()
-        val profFrag = ProfileFragment()
-        val setFrag = SettingsFragment()
-        val gvFrag = GameVaultFragment()
-        val wishFrag = WishlistFragment()
+        homeFrag = HomeFragment()
+        vwFrag = VaultWishlistFragment()
+        searchFrag = SearchFragment()
+        trendingFrag = TrendingFragment()
+        psFrag = ProfileSettingsFragment()
+
+        profFrag = ProfileFragment()
+        setFrag = SettingsFragment()
+        gvFrag = GameVaultFragment()
+        wishFrag = WishlistFragment()
+
+        bottomNav = findViewById(R.id.bottomNav)
 
         // --- Add & hide all fragments (only once) ---
         if (savedInstanceState == null) {
@@ -56,7 +75,6 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.mainScreen, setFrag, "SETTINGS").hide(setFrag)
                 .add(R.id.mainScreen, profFrag, "PROFILE").hide(profFrag)
                 .add(R.id.mainScreen, psFrag, "PROFILE_SETTINGS").hide(psFrag)
-                .add(R.id.mainScreen, salesFrag, "SALES").hide(salesFrag)
                 .add(R.id.mainScreen, trendingFrag, "TRENDS").hide(trendingFrag)
                 .add(R.id.mainScreen, searchFrag, "SEARCH").hide(searchFrag)
                 .add(R.id.mainScreen, vwFrag, "VAULT_WISH").hide(vwFrag)
@@ -68,16 +86,41 @@ class MainActivity : AppCompatActivity() {
             actvFrag = if (currentUser == null) {
                 // Show login fragment
                 fragMngr.beginTransaction().show(loginFrag).commit()
+                bottomNav.visibility = View.GONE
                 loginFrag
             } else {
                 // Show home fragment
                 fragMngr.beginTransaction().show(homeFrag).commit()
+                bottomNav.visibility = View.VISIBLE
                 homeFrag
+            }
+        } else { //else find currently visible fragment
+            actvFrag = fragMngr.fragments.lastOrNull() { it.isVisible }
+
+            val isMainFrag = actvFrag is HomeFragment || actvFrag is SearchFragment ||
+                             actvFrag is TrendingFragment || actvFrag is VaultWishlistFragment ||
+                             actvFrag is ProfileSettingsFragment
+            bottomNav.visibility = if (isMainFrag) View.VISIBLE else View.GONE
+        }
+
+        //ensures clicking the back button does the correct navigation
+        // (and that bottom Nav is only visible on main pages)
+        fragMngr.addOnBackStackChangedListener {
+            val currFrag = fragMngr.fragments.lastOrNull { it.isVisible }
+            actvFrag = currFrag
+
+            val isMainFrag = currFrag is HomeFragment || currFrag is SearchFragment ||
+                             currFrag is TrendingFragment || currFrag is VaultWishlistFragment ||
+                             currFrag is ProfileSettingsFragment
+
+            if (isMainFrag) {
+                bottomNav.visibility = View.VISIBLE
+            } else {
+                bottomNav.visibility = View.GONE
             }
         }
 
         // --- Bottom Navigation ---
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
             val newFrag: Fragment = when (item.itemId) {
                 R.id.homePage -> homeFrag
@@ -97,10 +140,27 @@ class MainActivity : AppCompatActivity() {
 
     // --- Swap fragments cleanly ---
     fun swapFrag(newFrag: Fragment) {
+        if (newFrag == actvFrag) return //to not swap with self
+
         val fragTrnsctn = supportFragmentManager.beginTransaction()
         actvFrag?.let { fragTrnsctn.hide(it) }
         fragTrnsctn.show(newFrag)
         fragTrnsctn.commit()
         actvFrag = newFrag
+    }
+
+    override fun onGameSelected(game: Game) {
+        Log.d(TAG, "Game: ${game.name} has been selected...\nGoing to details page...")
+
+        bottomNav.visibility = View.GONE
+
+        val detailsFrag = GameDetailsFragment.newInstance(game.name)
+        val fragTransaction = supportFragmentManager.beginTransaction()
+        actvFrag?.let { fragTransaction.hide(it) }
+        fragTransaction.add(R.id.mainScreen, detailsFrag, "GAME_DETAILS_${game.name.hashCode()}")
+        fragTransaction.addToBackStack(null)
+        fragTransaction.commit()
+
+        actvFrag = detailsFrag
     }
 }

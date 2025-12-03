@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="{Game Title}"
+        android:text="Title"
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Rating: {RATING}"
+        android:text="Rating:"
         android:textSize="20sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Release Date: {DATE}"
+        android:text="Release Date:"
         android:textSize="20sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,7 +54,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Genres: {GENRES}"
+        android:text="Genres:"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +68,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Themes: {N SUCH}"
+        android:text="Themes:"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +82,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Game Mode(s): {MODES}"
+        android:text="Game Mode(s):"
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -97,7 +97,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Platform(s): {PLATS}"
+        android:text="Platform(s):"
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -112,7 +112,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Other Services: {STORES}"
+        android:text="Also Available at:"
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +129,7 @@
         android:autoLink="web"
         android:gravity="center"
         android:linksClickable="true"
-        android:text="https://www.adhocla.com/"
+        android:text="https://"
         android:textColorLink="#2196F3"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -157,7 +157,7 @@
         app:layout_constraintTop_toBottomOf="@id/gameLinkTV"
         app:layout_constraintVertical_bias="0.024" />
 
-    <VideoView
+    <WebView
         android:id="@+id/trailerView"
         android:layout_width="325dp"
         android:layout_height="185dp"
@@ -168,20 +168,35 @@
         app:layout_constraintVertical_bias="0.057" />
 
     <TextView
-        android:id="@+id/descriptionTV"
-        android:layout_width="325dp"
-        android:layout_height="140dp"
+        android:id="@+id/descriptionHdr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:scrollbars="vertical"
-        android:text="{DESC}"
+        android:text="Description"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trailerView"
-        app:layout_constraintVertical_bias="0.182" />
+        app:layout_constraintVertical_bias="0.07" />
+
+    <TextView
+        android:id="@+id/descriptionTV"
+        android:layout_width="325dp"
+        android:layout_height="110dp"
+        android:gravity="center_horizontal"
+        android:scrollbars="vertical"
+        android:textSize="15sp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum cursus ornare nisi vel rhoncus. Quisque non volutpat odio, et cursus nunc. Integer pharetra posuere nulla at faucibus. Donec pulvinar velit eleifend lobortis commodo. Proin euismod dolor id magna consectetur viverra. Sed sollicitudin velit vitae nisi iaculis, varius dictum lacus rutrum. Ut consequat cursus nisl."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionHdr"
+        app:layout_constraintVertical_bias="0.01" />
 
     <Button
-        android:id="@+id/gameDetailsBackBtn"
+        android:id="@+id/gameBackBtn"
         android:layout_width="132dp"
         android:layout_height="50dp"
         android:text="BACK"
@@ -190,6 +205,39 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTV"
-        app:layout_constraintVertical_bias="0.285" />
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/errorPopUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layoutManager="LinearLayoutManager"
+        android:text="This is an example of an error!!"
+        android:textColor="#FFFF00"
+        android:textSize="40sp"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:background="#FF0000"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"/>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:theme="@style/Widget.AppCompat.ProgressBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

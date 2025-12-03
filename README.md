@@ -28,8 +28,8 @@ It is an app that collects information from many game databases (like Steam, Epi
 ### 1. User Features (Required and Optional)
 
 **Required Features**
-- [ ] 1. The user can sign-in and sign-out to the app
-- [ ] 2. The user can register an account
+- [x] 1. The user can sign-in and sign-out to the app
+- [x] 2. The user can register an account
 - [ ] 3. The user can connect to EPIC, Steam, etc with their logins
 - [ ] 4. The user can search for games from EPIC's, Steam's, etc libraries to add to their lists
 - [ ] 5. The user can search for games within their own lists
