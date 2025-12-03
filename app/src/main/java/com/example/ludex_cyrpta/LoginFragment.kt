@@ -1,14 +1,18 @@
 package com.example.ludex_cyrpta
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+
+private const val TAG = "LoginFragment"
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -37,21 +41,28 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Logged in!", Toast.LENGTH_SHORT).show()
 
+                    val mainAct = requireActivity() as MainActivity
+                    val fragMngr = mainAct.supportFragmentManager
+
                     // --- Clear all previous fragments ---
-                    parentFragmentManager.popBackStack(
+                    fragMngr.popBackStack(
                         null,
-                        androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE
                     )
 
-                    // --- Navigate to fresh HomeFragment ---
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.mainScreen, HomeFragment())
-                        .commit()
+                    // --- Navigate to existing HomeFragment so hidden fragments aren't destroyed ---
+                    var homeFrag = fragMngr.findFragmentByTag("HOME")
 
-                    // --- Show bottom navigation ---
-                    val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
-                    bottomNav.menu.setGroupVisible(0, true)
-                    bottomNav.selectedItemId = R.id.homePage
+                    if (homeFrag != null) {
+                        mainAct.swapFrag(homeFrag)
+
+                        val bottomNav = mainAct.findViewById<BottomNavigationView>(R.id.bottomNav)
+                        bottomNav.visibility = View.VISIBLE
+                        bottomNav.selectedItemId = R.id.homePage
+                    } else {
+                        Log.e(TAG, "Error: pre-initialized HomeFragment not found with tag: 'HOME'...\nMaking a new one...")
+                        fragMngr.beginTransaction().replace(R.id.mainScreen, HomeFragment(), "HOME").commit()
+                    }
                 }
                 .addOnFailureListener {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()

@@ -33,6 +33,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val isLoading: LiveData<Boolean> = _isLoading
     val errMsg: LiveData<String?> = _errMsg
 
+    //make the RecView "infinite" by adding page buffers
+    private var currPage = 0 //current page number
+    private val pageBuffer = 100 //number of games per page
+    private var isLastPage = false //bool for if it reached the last page for "infinite" RecView
+
     //initiate the network client stuff
     private val client = OkHttpClient()
     private val tokenRepo = TwitchTokenRepo(application.applicationContext)
@@ -46,9 +51,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         fetchGameListData("games")
     }
 
+    fun loadMoreGames() {
+        if (_isLoading.value == false && !isLastPage) {
+            currPage++
+            fetchGameListData("games")
+        }
+    }
+
     fun fetchGameListData(endpoint: String) = scope.launch {
         _isLoading.value = true
         _errMsg.value = null
+
+        val offset = currPage * pageBuffer //calculate offset based on current page
 
         val accessToken: String
         try {
@@ -62,15 +76,25 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         try {
-            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort name asc; limit 50; where websites.trusted = true;"
+            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort name asc; limit $pageBuffer; offset $offset; where websites.trusted = true;"
             val respBody = makeRequest(accessToken, endpoint, query)
-            val gameGen = parseResponse(respBody)
-            _gameList.value = gameGen
+            val newGamesGen = parseResponse(respBody)
 
-            Log.i(TAG, "Fetch Successful")
+            val currList = _gameList.value.orEmpty().toMutableList()
+            currList.addAll(newGamesGen)
+            _gameList.value = currList
+
+            if (newGamesGen.size < pageBuffer) {
+                isLastPage = true
+                Log.i(TAG, "Fetch successful. Reached the last page (page ${currPage + 1})")
+            } else {
+                isLastPage = false
+                Log.i(TAG, "Fetch Successful. Currently on page ${currPage + 1} and total games: ${_gameList.value?.size}")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Fetch failed: ${e.message}", e)
             _errMsg.value = "Data Fetch Failed: ${e.message}"
+            if (currPage > 0) currPage--
         } finally {
             _isLoading.value = false
         }

@@ -1,5 +1,6 @@
 package com.example.ludex_cyrpta
 
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import androidx.recyclerview.widget.DiffUtil
-import java.util.Locale
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class GameAdapter(
     private val onItemClicked: (Game) -> Unit
@@ -43,11 +45,13 @@ class GameAdapter(
         val imageURL = game.imageLink
         val imagePlaceholder = android.R.drawable.ic_menu_gallery //placeholder if link doesn't work or is empty
 
+        val radii = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 12f, holder.gView.context.resources.displayMetrics).toInt()
+
         val glideContext = Glide.with(holder.gView.context) //make it external to make the if/else statement more efficient
         val glideReq = if (imageURL.isNotEmpty()) {
             glideContext
                 .load(imageURL)
-                .centerCrop()
+                .transform(CenterCrop(), RoundedCorners(radii)) //give each image rounded corners
                 .placeholder(imagePlaceholder)
                 .error(imagePlaceholder) //if there's an error, use placeholder
         } else {

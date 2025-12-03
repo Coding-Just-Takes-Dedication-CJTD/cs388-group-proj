@@ -23,9 +23,12 @@ class SearchFragment : Fragment() {
     private var gameSelectedListener: OnGameSelectedListener? = null
     private val viewModel: GameViewModel by viewModels()
     private lateinit var adapter: GameAdapter
+    private lateinit var gamesRV: RecyclerView
     private lateinit var errorPopUp: TextView
     private lateinit var progBar: ProgressBar
     private lateinit var searchBar: SearchView
+
+    private var recViewScrollPos = 0 //save scroll position in Bundle (needed for infinite scroll)
 
     //standard function to attach to host; necessary for click to work
     override fun onAttach(context: Context) {
@@ -40,6 +43,9 @@ class SearchFragment : Fragment() {
     //standard function to create the fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //restore scroll position
+        if (savedInstanceState != null) recViewScrollPos = savedInstanceState.getInt("KEY_SCROLL_POSITION", 0)
     }
 
     //standard function to call the layout from the .xml file of the fragment
@@ -62,16 +68,46 @@ class SearchFragment : Fragment() {
         //create adapter with empty list
         adapter = GameAdapter { game ->
             Log.d(TAG, "Game clicked: ${game.name}.\nCalling host Activity listener...")
-
             gameSelectedListener?.onGameSelected(game)
         }
 
         //reference the RecyclerView and populate with adapter
-        val gamesRV = view.findViewById<RecyclerView>(R.id.gameList)
+        gamesRV = view.findViewById(R.id.gameList)
         gamesRV.adapter = adapter
 
         //set layout manager to position the items
-        gamesRV.layoutManager = LinearLayoutManager(view.context)
+        val layoutMngr = LinearLayoutManager(view.context)
+        gamesRV.layoutManager = layoutMngr
+
+        //set scroll position after data is set, then reset after use
+        if (recViewScrollPos != 0) {
+            viewModel.gameList.observe(viewLifecycleOwner, object: Observer<List<Game>> {
+                override fun onChanged(value: List<Game>) {
+                    if (value.isNotEmpty()) {
+                        layoutMngr.scrollToPosition(recViewScrollPos)
+                        recViewScrollPos = 0
+                        viewModel.gameList.removeObserver(this)
+                    }
+                }
+            })
+        }
+
+        //INFINITE scrolling
+        gamesRV.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy <= 0) return //don't occur when scrolling up
+
+                val visElemNum = layoutMngr.childCount
+                val totalElems = layoutMngr.itemCount
+                val firstVisPos = layoutMngr.findFirstVisibleItemPosition()
+
+                if (((visElemNum + firstVisPos) >= (totalElems - 5)) //if it scrolls past the threshold trigger
+                    && (firstVisPos >= 0) && (totalElems > 0)) //while the first visible position is in physical possible range
+                    viewModel.loadMoreGames()
+
+            }
+        })
 
         setupObservers() //reacts to data changes from the ViewModel
     }
@@ -96,6 +132,21 @@ class SearchFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             progBar.visibility = if (isLoading && errorPopUp.visibility != View.VISIBLE) View.VISIBLE else View.GONE
         }
+    }
+
+    //functions dealing with infinite scrolling
+    private fun getFirstVisibleItemPosition(): Int {
+        return (gamesRV.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("KEY_SCROLL_POSITION", getFirstVisibleItemPosition()) // Save the current scroll position before the fragment is destroyed
+    }
+
+    override fun onPause() {
+        super.onPause()
+        recViewScrollPos = getFirstVisibleItemPosition() // get the position on pause to handle back navigation/temporary destruction
     }
 
     //companion to onAttach; does opposite
