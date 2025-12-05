@@ -39,7 +39,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun logout() {
+    /*private fun logout() {
         // --- Sign out from Firebase ---
         FirebaseAuth.getInstance().signOut()
 
@@ -55,8 +55,22 @@ class ProfileFragment : Fragment() {
             .commit()
 
         // --- Hide bottom navigation ---
-        val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
-        bottomNav.menu.setGroupVisible(0, false)
+       // val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
+       // bottomNav.menu.setGroupVisible(0, false)
+    }*/
+    private fun logout() {
+        // --- Sign out from Firebase ---
+        FirebaseAuth.getInstance().signOut()
+
+
+
+        // Restart the Activity
+        // clears everything and starts fresh
+        val intent = android.content.Intent(requireContext(), MainActivity::class.java)
+        //  clear the history so the user can't "back" into the logged-in app
+        intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        // --------------------------------------
     }
 
 }
