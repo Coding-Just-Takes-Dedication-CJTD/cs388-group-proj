@@ -15,9 +15,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.099" />
 
     <TextView
         android:id="@+id/gameRatingTV"
@@ -29,7 +30,7 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gameTitleTV"
         app:layout_constraintVertical_bias="0.0" />
@@ -184,7 +185,7 @@
     <TextView
         android:id="@+id/descriptionTV"
         android:layout_width="325dp"
-        android:layout_height="110dp"
+        android:layout_height="80dp"
         android:gravity="center_horizontal"
         android:scrollbars="vertical"
         android:textSize="15sp"
@@ -202,10 +203,10 @@
         android:text="BACK"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
 
     <TextView
         android:id="@+id/errorPopUp"
@@ -239,5 +240,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <RadioGroup
+        android:id="@+id/listAdd_RG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTV">
+
+        <RadioButton
+            android:id="@+id/AddToWL_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add to Wishlist"
+            android:textSize="18sp"
+            android:layout_marginRight="7dp"/>
+
+        <RadioButton
+            android:id="@+id/AddToGV_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add to Game Vault"
+            android:textSize="18sp"
+            android:layout_marginLeft="7dp"/>
+    </RadioGroup>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
