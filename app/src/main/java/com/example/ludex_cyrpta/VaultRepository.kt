@@ -5,15 +5,33 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import android.content.Context
 
-class VaultRepository {
+
+class VaultRepository(context: Context) {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+
+    private val gameDao = AppDatabase.getDatabase(context).gameDao()
     private val TAG = "VaultRepository"
 
     // 1. Add a game to the user's personal vault
     fun addGameToVault(game: Game, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val currentUser = auth.currentUser
+
+        // A. Save to Local Room DB (Instant, works offline)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val localGame = game.toLocalGame().apply { inVault = true }
+                gameDao.insertGame(localGame)
+                Log.d(TAG, "Saved to local Room DB")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to save locally: ${e.message}")
+            }
+        }
         if (currentUser == null) {
             onFailure("User not logged in")
             return
@@ -39,11 +57,11 @@ class VaultRepository {
 
         vaultRef.set(gameData)
             .addOnSuccessListener {
-                Log.d(TAG, "Game added to vault: ${game.name}")
+                Log.d(TAG, "Game added to firestore vault: ${game.name}")
                 onSuccess()
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Error adding game", e)
+                Log.e(TAG, "Error adding game to Firestore", e)
                 onFailure(e.message ?: "Unknown error")
             }
     }
@@ -125,5 +143,24 @@ class VaultRepository {
                 Log.e(TAG, "Error removing game", e)
                 onFailure(e.message ?: "Unknown error")
             }
+    }
+
+    private fun Game.toLocalGame(): LocalGame {
+        return LocalGame(
+            id = this.id,
+            name = this.name,
+            rating = this.rating,
+            imageLink = this.imageLink,
+            releaseDate = this.releaseDate,
+            descr = this.descr,
+            synopsis = this.synopsis,
+            trailerLink = this.trailerLink,
+            website = this.website,
+            genreTag = this.genreTag,
+            themeTag = this.themeTag,
+            gameModeTag = this.gameModeTag,
+            platformTag = this.platformTag,
+            otherServicesTag = this.otherServicesTag
+        )
     }
 }

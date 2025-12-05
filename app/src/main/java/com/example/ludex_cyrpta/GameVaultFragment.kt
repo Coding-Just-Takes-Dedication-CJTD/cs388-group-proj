@@ -15,8 +15,9 @@ private const val TAG = "GameVaultFragment"
 class GameVaultFragment : Fragment() {
     //standard function to create the fragment
     // Helper class to talk to Firebase
-    private val vaultRepo = VaultRepository()
+    //private val vaultRepo = VaultRepository()
     // Adapter to handle the list items
+    private val vaultRepo by lazy { VaultRepository(requireContext()) }
     private lateinit var adapter: GameAdapter
     // Interface to handle clicks (navigating to details)
     private var gameSelectedListener: OnGameSelectedListener? = null

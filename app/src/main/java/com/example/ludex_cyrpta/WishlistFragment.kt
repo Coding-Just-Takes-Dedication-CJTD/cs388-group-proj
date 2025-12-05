@@ -16,7 +16,8 @@ class WishlistFragment : Fragment() {
     //standard function to create the fragment
 
 
-    private val wishRepo = WishlistRepository()
+    //private val wishRepo = WishlistRepository()
+    private val wishRepo by lazy { WishlistRepository(requireContext()) }
     private lateinit var adapter: GameAdapter
     private var gameSelectedListener: OnGameSelectedListener? = null
 

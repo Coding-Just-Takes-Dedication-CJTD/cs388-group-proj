@@ -45,6 +45,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope = viewModelScope
 
+    private val gameDao = AppDatabase.getDatabase(application).gameDao()
+
     init {
         _isLoading.value = false
         _errMsg.value = null
@@ -100,17 +102,37 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun fetchGameDetails(gameName: String, endpoint: String = "games") {
+    // UPDATED: Offline-First Fetch Logic
+    // We added 'gameId' as an optional parameter to check the local DB first
+    fun fetchGameDetails(gameName: String, gameId: Int? = null) {
         scope.launch {
             _isLoading.postValue(true)
-            _gameObj.postValue(null) //to clear the previous object
+            _gameObj.postValue(null) // Clear previous data
+            _errMsg.postValue(null)
+
+            // 1. CHECK LOCAL STORAGE (ROOM) FIRST
+            // If we have an ID, we check our backpack (Room DB)
+            if (gameId != null) {
+                val localGame = gameDao.getGameById(gameId)
+
+                if (localGame != null) {
+                    Log.i(TAG, "Found game in local storage! Loading instantly.")
+                    // Convert the local data back to a Game object and show it
+                    _gameObj.postValue(localGame.toGame())
+
+                    // Stop loading and EXIT. We don't need the internet.
+                    _isLoading.postValue(false)
+                    return@launch
+                }
+            }
+
+            // 2. NOT FOUND LOCALLY? FETCH FROM INTERNET (IGDB API)
+            Log.i(TAG, "Game not in local storage. Fetching from IGDB API...")
 
             val accessToken: String
             try {
                 accessToken = authService.tokenCheck()
-                Log.i(TAG, "Token fetched successfully.")
             } catch (e: Exception) {
-                Log.e(TAG, "Cannot fetch token. Error: ${e.message}", e)
                 _errMsg.postValue("Auth Failed: ${e.message}")
                 _isLoading.postValue(false)
                 return@launch
@@ -118,32 +140,25 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
             val injectable = gameName.replace("\"", "\\\"")
             val query = "fields id, name, total_rating, cover.image_id, genres.name, themes.name, game_modes.name, platforms.abbreviation, external_games.external_game_source.name, first_release_date, videos.video_id, summary, storyline, websites.url; where name = \"$injectable\";"
+
             try {
-                val respBody = makeRequest(accessToken, endpoint, query)
+                val respBody = makeRequest(accessToken, "games", query)
                 val gameDetail = parseDetailedResponse(respBody)
 
                 if (gameDetail == null) {
-                    throw GameNotFoundException("No game details found for '$gameName'. Name might be misspelled or unavailable.")
+                    throw GameNotFoundException("No game details found for '$gameName'.")
                 } else {
                     _gameObj.postValue(gameDetail)
                 }
-
                 Log.i(TAG, "Fetch Successful for $gameName")
             } catch (e: Exception) {
                 Log.e(TAG, "Details fetch failed: ${e.message}", e)
-
-                val errorMsg = if (e is GameNotFoundException) {
-                    e.message
-                } else {
-                    "Details Data Fetch Failed: ${e.message}"
-                }
+                val errorMsg = if (e is GameNotFoundException) e.message else "Details Data Fetch Failed: ${e.message}"
                 _errMsg.postValue(errorMsg)
-                _gameObj.postValue(null) //clear data if error occurs
             } finally {
                 _isLoading.postValue(false)
             }
         }
-
     }
 
     private fun getNames(jsonOBJ: JSONObject, fieldName: String, fieldType: String = "name"): List<String> {
@@ -428,5 +443,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 _isLoading.value = false
             }
         }
+    }
+
+    private fun LocalGame.toGame(): Game {
+        return Game(
+            id = this.id,
+            name = this.name,
+            rating = this.rating,
+            imageLink = this.imageLink,
+            genreTag = this.genreTag,
+            themeTag = this.themeTag,
+            gameModeTag = this.gameModeTag,
+            platformTag = this.platformTag,
+            otherServicesTag = this.otherServicesTag,
+            releaseDate = this.releaseDate,
+            trailerLink = this.trailerLink,
+            descr = this.descr,
+            synopsis = this.synopsis,
+            listBelong = emptyMap(),
+            trending = false,
+            website = this.website
+        )
     }
  }

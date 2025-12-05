@@ -43,8 +43,10 @@ class GameDetailsFragment : Fragment() {
     private lateinit var wishListAddBtn: Button
     private lateinit var vaultListAddBtn: Button
     private lateinit var progBar: ProgressBar
-    private val vaultRepo = VaultRepository()
-    private val wishRepo = WishlistRepository()
+    //private val vaultRepo = VaultRepository()
+    private val vaultRepo by lazy { VaultRepository(requireContext()) }
+    //private val wishRepo = WishlistRepository()
+    private val wishRepo by lazy { WishlistRepository(requireContext()) }
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -138,13 +140,14 @@ class GameDetailsFragment : Fragment() {
         setupObservers()
 
         val gameName = arguments?.getString("ARG_GAME_NAME")
+        val gameId = arguments?.getInt("ARG_GAME_ID") //game id gotten as well
         if (gameName.isNullOrEmpty()) {
             errorMsg.text = "No game name provided!"
             errorMsg.visibility = View.VISIBLE
             Log.e(TAG, "UI Error: ${errorMsg.text}")
             return
         }
-        viewModel.fetchGameDetails(gameName)
+        viewModel.fetchGameDetails(gameName, gameId)
     }
 
     override fun onPause() {
@@ -341,10 +344,14 @@ class GameDetailsFragment : Fragment() {
 
     // Companion object for creating the fragment instance with arguments
     companion object {
-        const val ARG_GAME_NAME = "ARG_GAME_NAME" // Define constant for argument key
-        fun newInstance(gameName: String) = GameDetailsFragment().apply {
+        const val ARG_GAME_NAME = "ARG_GAME_NAME"
+        const val ARG_GAME_ID = "ARG_GAME_ID" // NEW: Key for the ID
+
+        // Updated to accept both name and ID
+        fun newInstance(gameName: String, gameId: Int) = GameDetailsFragment().apply {
             arguments = Bundle().apply {
                 putString(ARG_GAME_NAME, gameName)
+                putInt(ARG_GAME_ID, gameId) // Save the ID into the bundle
             }
         }
     }
