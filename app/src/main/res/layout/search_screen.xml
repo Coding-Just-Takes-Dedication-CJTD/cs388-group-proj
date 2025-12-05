@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchBar"
         android:layout_width="360dp"
         android:layout_height="50dp"
+        app:iconifiedByDefault="false"
+        app:queryHint="Search for a game..."
         android:background="@drawable/search_view_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -8,15 +8,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
 
     private lateinit var auth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
 
+
+        val usernameInput = view.findViewById<EditText>(R.id.regUsernameInput)
         val email = view.findViewById<EditText>(R.id.regEmailInput)
         val pass = view.findViewById<EditText>(R.id.regPasswordInput)
         val confirm = view.findViewById<EditText>(R.id.regConfirmPasswordInput)
@@ -25,11 +29,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         // --- Register button ---
         registerBtn.setOnClickListener {
+            val uName = usernameInput.text.toString().trim() // Get Username
             val e = email.text.toString().trim()
             val p = pass.text.toString().trim()
             val c = confirm.text.toString().trim()
 
-            if (e.isEmpty() || p.isEmpty() || c.isEmpty()) {
+            if (uName.isEmpty() || e.isEmpty() || p.isEmpty() || c.isEmpty()) {
                 Toast.makeText(requireContext(), "Fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -41,20 +46,37 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
 // ... inside the registerBtn listener ...
             auth.createUserWithEmailAndPassword(e, p)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Account created! Please log in.", Toast.LENGTH_SHORT).show()
+                .addOnSuccessListener { result -> // --- FIX 2: Added "result ->" so we can use it below
 
-                    // Sign out so they aren't auto-logged in (if that's your preference)
-                    auth.signOut()
+                    val userId = result.user?.uid
 
-                    // --- NEW CODE: Restart the App cleanly ---
-                    val intent = android.content.Intent(requireContext(), MainActivity::class.java)
-                    // This flag clears the old activity so the "back" button doesn't take them to the dead state
-                    intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    // ----------------------------------------
+                    if (userId != null) {
+                        val userMap = hashMapOf(
+                            "username" to uName,
+                            "email" to e
+                        )
+
+                        // Save the username to Firestore
+                        db.collection("users").document(userId).set(userMap)
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Account created! Please log in", Toast.LENGTH_SHORT).show()
+
+                                // Sign out so they aren't auto-logged in
+                                auth.signOut()
+
+                                // Restart the App cleanly
+                                val intent = android.content.Intent(requireContext(), MainActivity::class.java)
+                                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                            }
+                            .addOnFailureListener { e ->
+                                // If database save fails, tell the user
+                                Toast.makeText(requireContext(), "Failed to save username: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }
                 .addOnFailureListener {
+                    // If account creation fails, tell the user
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
         }
@@ -63,9 +85,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         toLogin.setOnClickListener {
             // Clear RegisterFragment from back stack and go back to login
             parentFragmentManager.popBackStack()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.mainScreen, LoginFragment())
-                .commit()
         }
     }
 }
