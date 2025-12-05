@@ -10,6 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import android.Manifest // <--- Needed for permission constants
+import android.content.pm.PackageManager // <--- Needed to check permission status
+import android.os.Build // <--- Needed to check Android version
+import androidx.activity.result.contract.ActivityResultContracts // <--- Needed for the new way to ask permissions
+import androidx.core.content.ContextCompat // <--- Helper for compatibility
+import com.google.firebase.messaging.FirebaseMessaging // <--- The Firebase class to get the token
 
 private const val TAG = "MainActivity"
 
@@ -32,9 +38,36 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
     private lateinit var gvFrag: GameVaultFragment
     private lateinit var wishFrag: WishlistFragment
 
+
+    // --- NEW: This handles the USER'S CHOICE when the permission pop-up appears ---
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d(TAG, "Notification permission granted")
+        } else {
+            Log.w(TAG, "Notification permission denied")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        askNotificationPermission()
+
+
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+            val token = task.result
+            Log.d(TAG, "FCM Token: $token") // <--- LOOK IN LOGCAT FOR THIS TAG TO COPY YOUR TOKEN
+        }
+
+
         auth = FirebaseAuth.getInstance()
 
         // Edge-to-edge padding
@@ -163,4 +196,20 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
         actvFrag = detailsFrag
     }
+
+    // Helper function to check Android version and permission status
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // Permission is already granted; do nothing.
+            } else {
+                // Permission is NOT granted; show the system pop-up to the user.
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+
 }

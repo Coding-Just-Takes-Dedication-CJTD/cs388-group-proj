@@ -39,23 +39,20 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 return@setOnClickListener
             }
 
+// ... inside the registerBtn listener ...
             auth.createUserWithEmailAndPassword(e, p)
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Account created! Please log in.", Toast.LENGTH_SHORT).show()
 
-                    // Sign out so user is not auto-logged in
+                    // Sign out so they aren't auto-logged in (if that's your preference)
                     auth.signOut()
 
-                    // Clear input fields
-                    email.text.clear()
-                    pass.text.clear()
-                    confirm.text.clear()
-
-                    // --- Clear this fragment from back stack & navigate to LoginFragment ---
-                    parentFragmentManager.popBackStack()
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.mainScreen, LoginFragment())
-                        .commit()
+                    // --- NEW CODE: Restart the App cleanly ---
+                    val intent = android.content.Intent(requireContext(), MainActivity::class.java)
+                    // This flag clears the old activity so the "back" button doesn't take them to the dead state
+                    intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    // ----------------------------------------
                 }
                 .addOnFailureListener {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()

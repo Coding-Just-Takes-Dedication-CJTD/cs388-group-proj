@@ -75,4 +75,7 @@ dependencies {
 
     // Firestore
     implementation 'com.google.firebase:firebase-firestore'
+
+    //messaging
+    implementation 'com.google.firebase:firebase-messaging'
 }
