@@ -37,8 +37,8 @@ class VaultRepository(context: Context) {
             return
         }
 
-        // Path: users -> [USER_ID] -> vault -> [GAME_ID]
-        // We use the Game ID as the document name so we never get duplicate files for the same game
+        // Firestore Path: users -> [USER_ID] -> vault -> [GAME_ID]
+        // Game ID: avoid duplicate files for the same game
         val vaultRef = db.collection("users")
             .document(currentUser.uid)
             .collection("vault")
@@ -66,7 +66,7 @@ class VaultRepository(context: Context) {
             }
     }
 
-    // 2. Check if a game is already in the vault (used to update the button UI)
+    // if a game is already in the vault (used to update the button UI)
     fun isGameInVault(gameId: Int, onResult: (Boolean) -> Unit) {
         val currentUser = auth.currentUser ?: return
 
@@ -85,8 +85,26 @@ class VaultRepository(context: Context) {
             }
     }
 
-    // 3. Get the full list of saved games for the Vault Fragment
+    // full list of saved games for the Vault Fragment
     fun getVaultGames(onResult: (List<Game>) -> Unit, onFailure: (String) -> Unit) {
+        // A. Check Local DB First
+        CoroutineScope(Dispatchers.IO).launch {
+            val localList = gameDao.getVaultGames()
+
+            if (localList.isNotEmpty()) {
+                Log.d(TAG, "Loaded ${localList.size} games from Local DB")
+                val games = localList.map { it.toGame() }
+                CoroutineScope(Dispatchers.Main).launch {
+                    onResult(games)
+                }
+            } else {
+                // B. If Local is empty, fetch from Firestore
+                fetchFromFirestore(onResult, onFailure)
+            }
+        }
+    }
+
+    private fun fetchFromFirestore(onResult: (List<Game>) -> Unit, onFailure: (String) -> Unit) {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             onFailure("No user logged in")
@@ -96,13 +114,12 @@ class VaultRepository(context: Context) {
         db.collection("users")
             .document(currentUser.uid)
             .collection("vault")
-            .orderBy("added_at", Query.Direction.DESCENDING) // Sorts so newest adds are at the top
+            .orderBy("added_at", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
                 val gameList = mutableListOf<Game>()
                 for (document in result) {
                     try {
-                        // Convert Firestore data back into a Game object
                         val game = Game(
                             id = document.getLong("id")?.toInt() ?: 0,
                             name = document.getString("name") ?: "Unknown",
@@ -112,19 +129,39 @@ class VaultRepository(context: Context) {
                             synopsis = document.getString("synopsis") ?: ""
                         )
                         gameList.add(game)
+
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing game: ${e.message}")
                     }
                 }
                 onResult(gameList)
             }
-            .addOnFailureListener { e ->
-                onFailure(e.message ?: "Error fetching vault")
-            }
+            .addOnFailureListener { e -> onFailure(e.message ?: "Error fetching vault") }
     }
 
+
+
+    // Remove a game from the vault (Updates Local AND Cloud)
     fun removeGameFromVault(gameId: Int, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val currentUser = auth.currentUser
+
+        // UPDATE LOCAL DATABASE
+        CoroutineScope(Dispatchers.IO).launch {
+            // Find the game in the backpack
+            val localGame = gameDao.getGameById(gameId)
+
+            // If found, uncheck the "inVault" flag
+            if (localGame != null) {
+                localGame.inVault = false
+
+
+                // (REPLACE) to update the existing row.
+                gameDao.insertGame(localGame)
+                Log.d(TAG, "Removed from local Room DB (Flag updated)")
+            }
+        }
+
+        // REMOVE FROM FIRESTORE
         if (currentUser == null) {
             onFailure("User not logged in")
             return
@@ -136,7 +173,7 @@ class VaultRepository(context: Context) {
             .document(gameId.toString())
             .delete()
             .addOnSuccessListener {
-                Log.d(TAG, "Game removed from vault: $gameId")
+                Log.d(TAG, "Game removed from Firestore: $gameId")
                 onSuccess()
             }
             .addOnFailureListener { e ->
@@ -161,6 +198,26 @@ class VaultRepository(context: Context) {
             gameModeTag = this.gameModeTag,
             platformTag = this.platformTag,
             otherServicesTag = this.otherServicesTag
+        )
+    }
+    private fun LocalGame.toGame(): Game {
+        return Game(
+            id = this.id,
+            name = this.name,
+            rating = this.rating,
+            imageLink = this.imageLink,
+            genreTag = this.genreTag,
+            themeTag = this.themeTag,
+            gameModeTag = this.gameModeTag,
+            platformTag = this.platformTag,
+            otherServicesTag = this.otherServicesTag,
+            releaseDate = this.releaseDate,
+            trailerLink = this.trailerLink,
+            descr = this.descr,
+            synopsis = this.synopsis,
+            listBelong = emptyMap(),
+            trending = false,
+            website = this.website
         )
     }
 }
