@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/gameTitleTV"
@@ -184,28 +189,28 @@
     <TextView
         android:id="@+id/descriptionTV"
         android:layout_width="325dp"
-        android:layout_height="110dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:scrollbars="vertical"
-        android:textSize="15sp"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum cursus ornare nisi vel rhoncus. Quisque non volutpat odio, et cursus nunc. Integer pharetra posuere nulla at faucibus. Donec pulvinar velit eleifend lobortis commodo. Proin euismod dolor id magna consectetur viverra. Sed sollicitudin velit vitae nisi iaculis, varius dictum lacus rutrum. Ut consequat cursus nisl."
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionHdr"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.547" />
 
     <Button
         android:id="@+id/gameBackBtn"
-        android:layout_width="132dp"
-        android:layout_height="50dp"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
         android:text="BACK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.057"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTV"
-        app:layout_constraintVertical_bias="0.23" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1" />
 
     <TextView
         android:id="@+id/errorPopUp"
@@ -229,16 +234,28 @@
 
     <Button
         android:id="@+id/vaultListAddBtn"
-        android:layout_width="137dp"
-        android:layout_height="52dp"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="#4CAF50"
         android:text="Add to Vault"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.941"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTV"
-        app:layout_constraintVertical_bias="0.243" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.9" />
+
+    <Button
+        android:id="@+id/wishListAddBtn"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Add to Wishlist"
+        android:backgroundTint="#2196F3"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTV" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
@@ -254,3 +271,4 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

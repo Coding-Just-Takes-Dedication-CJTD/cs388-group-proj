@@ -104,4 +104,26 @@ class VaultRepository {
                 onFailure(e.message ?: "Error fetching vault")
             }
     }
+
+    fun removeGameFromVault(gameId: Int, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            onFailure("User not logged in")
+            return
+        }
+
+        db.collection("users")
+            .document(currentUser.uid)
+            .collection("vault")
+            .document(gameId.toString())
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "Game removed from vault: $gameId")
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error removing game", e)
+                onFailure(e.message ?: "Unknown error")
+            }
+    }
 }
