@@ -7,7 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.SearchView
+//import android.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -61,7 +62,44 @@ class SearchFragment : Fragment() {
 
         progBar = view.findViewById(R.id.progressBar)
         errorPopUp = view.findViewById(R.id.errorPopUp)
+        // Find the search bar in the layout
         searchBar = view.findViewById(R.id.searchBar)
+
+        // Attach a listener that triggers every time the text changes
+        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            // This runs if the user presses the "Enter" or "Search" button on their keyboard
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Only search if the text isn't empty
+                if (!query.isNullOrEmpty()) {
+                    // Send the query to the ViewModel function we wrote above
+                    viewModel.searchGames(query)
+                    // Hide the keyboard so the user can see the results
+                    searchBar.clearFocus()
+                }
+                return true // Return true to say "we handled this event"
+            }
+
+            // This runs INSTANTLY every time a letter is typed or deleted
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    // Check if the user has typed at least 3 characters
+                    if (newText.length >= 3) {
+                        // If yes, perform the search automatically
+                        // This allows the user to see results as they type "Zel..." -> "Zelda"
+                        viewModel.searchGames(newText)
+                    } else if (newText.isEmpty()) {
+                        // If the text box is empty (user deleted everything or clicked X),
+                        // go back to the default list of games.
+                        viewModel.resetToDefaultList()
+                    }
+                }
+                return true
+            }
+        })
+
+
+
 
         //TODO: for Chidi, do stuff with searchBar here, might involve updating ViewModel
 

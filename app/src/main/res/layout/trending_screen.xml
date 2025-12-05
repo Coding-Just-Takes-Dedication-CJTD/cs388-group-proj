@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".TrendingFragment" >
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="360dp"
         android:layout_height="50dp"
+        app:iconifiedByDefault="false"
+        app:queryHint="Search for a game..."
         android:background="@drawable/search_view_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,20 +34,26 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.036" />
 
-    <TextView
-        android:id="@+id/trendingContentPlacehldr"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trendingList"
         android:layout_width="370dp"
-        android:layout_height="500dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Trending Content (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintVertical_bias="0.283" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        tools:listitem="@layout/game_rv_item" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

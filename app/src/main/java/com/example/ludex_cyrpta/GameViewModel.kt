@@ -329,4 +329,104 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+    // Function to search for games based on user text
+    fun searchGames(query: String) {
+        // Launch a coroutine (background thread) so we don't freeze the app UI
+        scope.launch {
+            // value = true triggers the loading spinner in the UI
+            _isLoading.value = true
+            // Clear any old error messages so they don't show up on a new search
+            _errMsg.value = null
+
+            val accessToken: String
+            try {
+                // Check if we have a valid Twitch token; if not, fetch a new one
+                accessToken = authService.tokenCheck()
+            } catch (e: Exception) {
+                // If token fails, show error and stop loading
+                _errMsg.value = "Auth Failed: ${e.message}"
+                _isLoading.value = false
+                return@launch
+            }
+
+            // Sanitize input: Remove quotation marks from user input
+            // This prevents the API query from breaking if the user types a " symbol
+            val safeQuery = query.replace("\"", "")
+
+            // Construct the IGDB API query.
+            // 'search' keyword tells IGDB to look for matching names.
+            // We request the same fields (id, name, rating, etc.) so the cards look the same.
+            val apiQuery = "search \"$safeQuery\"; fields id, name, total_rating, cover.image_id, first_release_date, storyline; limit 50;"
+
+            try {
+                // Send the request to the internet
+                val respBody = makeRequest(accessToken, "games", apiQuery)
+                // Convert the raw JSON text into a list of Game objects
+                val searchResults = parseResponse(respBody)
+
+                // IMPORTANT: We overwrite the current list completely.
+                // In the normal feed, we used .addAll(), but for search, we want ONLY these results.
+                _gameList.value = searchResults
+
+                // We set this to true to stop the "Infinite Scroll" logic.
+                // Search results are usually a single batch, we don't want the app trying to load "Page 2" of a search.
+                isLastPage = true
+            } catch (e: Exception) {
+                // If the network request fails, show the error message
+                _errMsg.value = "Search Failed: ${e.message}"
+            } finally {
+                // Hide the loading spinner regardless of success or failure
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // Function to return the screen to normal when the user clears the search bar
+    fun resetToDefaultList() {
+        // Reset page counter to 0 so we start fresh
+        currPage = 0
+        // Re-enable infinite scrolling
+        isLastPage = false
+        // Clear the screen temporarily
+        _gameList.value = emptyList()
+        // Call the original function to load the standard "popular games" list
+        fetchGameListData("games")
+    }
+    fun fetchTrendingGames() {
+        scope.launch {
+            _isLoading.value = true
+            _gameList.value = emptyList() // Clear old data
+
+            val accessToken: String
+            try {
+                accessToken = authService.tokenCheck()
+            } catch (e: Exception) {
+                _errMsg.value = "Auth Failed: ${e.message}"
+                _isLoading.value = false
+                return@launch
+            }
+
+            // QUERY EXPLANATION:
+            // sort total_rating_count desc; -> Get the most discussed/rated games
+            // where total_rating >= 80;     -> Ensure they are actually rated (80+ score)
+            // limit 10;                     -> Only show the top 10 (Mini-list)
+           // val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort total_rating_count desc; where total_rating >= 80; limit 10;"
+
+            // 1. sort total_rating desc: Put the highest scores (99, 98, etc.) at the top.
+            // 2. where total_rating_count > 50: This is CRITICAL. It filters out obscure games
+            //    that have one single 100/100 review. We only want games with enough votes to matter.
+            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort total_rating desc; where total_rating_count > 50; limit 20;"
+            try {
+                val respBody = makeRequest(accessToken, "games", query)
+                val games = parseResponse(respBody)
+
+                // Since this is a mini-list, we just overwrite the list
+                _gameList.value = games
+            } catch (e: Exception) {
+                _errMsg.value = "Trending Fetch Failed: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
  }
