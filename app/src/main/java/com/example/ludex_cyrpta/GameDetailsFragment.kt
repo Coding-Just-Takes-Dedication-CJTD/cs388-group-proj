@@ -12,9 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,8 +40,10 @@ class GameDetailsFragment : Fragment() {
     //initialize other views
     private lateinit var trailerVid: WebView
     private lateinit var backButton: Button
-    private lateinit var addToListBtnGroup: RadioGroup
+    private lateinit var wishListAddBtn: Button
+    private lateinit var vaultListAddBtn: Button
     private lateinit var progBar: ProgressBar
+    private val vaultRepo = VaultRepository()
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -67,8 +67,35 @@ class GameDetailsFragment : Fragment() {
         backButton = view.findViewById(R.id.gameBackBtn)
         progBar = view.findViewById(R.id.progressBar)
 
-        //add the RadioGroup for selecting which list to add to
-        addToListBtnGroup = view.findViewById(R.id.listAdd_RG)
+
+
+
+
+        //TODO: initialize wishListAddBtn AND vaultListAddBtn
+
+        vaultListAddBtn = view.findViewById(R.id.vaultListAddBtn)
+
+        vaultListAddBtn.setOnClickListener {
+            val currentGame = viewModel.gameObj.value
+            if (currentGame != null) {
+                vaultListAddBtn.isEnabled = false
+                vaultListAddBtn.text = "Adding..."
+
+                vaultRepo.addGameToVault(currentGame,
+                    onSuccess = {
+                        // Success: Update UI
+                        vaultListAddBtn.text = "In Vault"
+                    },
+                    onFailure = { error ->
+                        // Failure: Reset UI and show error
+                        vaultListAddBtn.isEnabled = true
+                        vaultListAddBtn.text = "Add to Vault"
+                        errorMsg.text = "Save failed: $error"
+                        errorMsg.visibility = View.VISIBLE
+                    }
+                )
+            }
+        }
 
         errorMsg = view.findViewById(R.id.errorPopUp)
 
@@ -76,21 +103,7 @@ class GameDetailsFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        //what to do if either RadioButton is clicked
-        addToListBtnGroup.setOnCheckedChangeListener { radGroup, checkedBtn ->
-            if (checkedBtn == R.id.AddToGV_rb) {
-                Toast.makeText(requireContext(), "Added to Game Vault", Toast.LENGTH_SHORT).show()
-                //TODO: add the other stuff clicking "Add to Game Vault" is supposed to do
-                // (add to the list (make sure their placement in the list is saved into the Game instance w/ the list name
-                // (it's the listBelong map parameter)) and do a push notif)
-            } else if (checkedBtn == R.id.AddToWL_rb) {
-                Toast.makeText(requireContext(), "Added to WishList", Toast.LENGTH_SHORT).show()
-                //TODO: add the other stuff clicking "Add to Wishlist" is supposed to do
-                // (add to the list (make sure their placement in the list is saved into the Game instance w/ the list name
-                // (it's the listBelong map parameter)) and do a push notif)
-            }
-
-        }
+        //TODO: add the setOnClickListeners for the other 2 buttons
 
         //webView setup
         trailerVid.settings.javaScriptEnabled = true
@@ -176,6 +189,18 @@ class GameDetailsFragment : Fragment() {
                     vidLayout.verticalBias = 0.toFloat()
                     trailerVid.visibility = View.GONE
                 }
+                vaultRepo.isGameInVault(game.id) { exists ->
+                    if (exists) {
+                        vaultListAddBtn.text = "In Vault"
+                        vaultListAddBtn.isEnabled = false
+                        vaultListAddBtn.setBackgroundColor(android.graphics.Color.GRAY)
+                    } else {
+                        vaultListAddBtn.text = "Add to Vault"
+                        vaultListAddBtn.isEnabled = true
+                        // Optional: Reset color to default green if needed
+                        // vaultListAddBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")))
+                    }
+                }
 
                 //hide progress bar & clear lingering errors
                 errorMsg.visibility = View.GONE
@@ -185,7 +210,11 @@ class GameDetailsFragment : Fragment() {
                 errorMsg.visibility = View.VISIBLE
                 progBar.visibility = View.GONE
             }
+
+
         })
+
+
 
         // Observe loading state
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
