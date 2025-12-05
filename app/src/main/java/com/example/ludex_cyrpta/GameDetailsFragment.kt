@@ -12,7 +12,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,8 +42,7 @@ class GameDetailsFragment : Fragment() {
     //initialize other views
     private lateinit var trailerVid: WebView
     private lateinit var backButton: Button
-    private lateinit var wishListAddBtn: Button
-    private lateinit var vaultListAddBtn: Button
+    private lateinit var addToListBtnGroup: RadioGroup
     private lateinit var progBar: ProgressBar
 
 
@@ -66,7 +67,8 @@ class GameDetailsFragment : Fragment() {
         backButton = view.findViewById(R.id.gameBackBtn)
         progBar = view.findViewById(R.id.progressBar)
 
-        //TODO: initialize wishListAddBtn AND vaultListAddBtn
+        //add the RadioGroup for selecting which list to add to
+        addToListBtnGroup = view.findViewById(R.id.listAdd_RG)
 
         errorMsg = view.findViewById(R.id.errorPopUp)
 
@@ -74,7 +76,21 @@ class GameDetailsFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        //TODO: add the setOnClickListeners for the other 2 buttons
+        //what to do if either RadioButton is clicked
+        addToListBtnGroup.setOnCheckedChangeListener { radGroup, checkedBtn ->
+            if (checkedBtn == R.id.AddToGV_rb) {
+                Toast.makeText(requireContext(), "Added to Game Vault", Toast.LENGTH_SHORT).show()
+                //TODO: add the other stuff clicking "Add to Game Vault" is supposed to do
+                // (add to the list (make sure their placement in the list is saved into the Game instance w/ the list name
+                // (it's the listBelong map parameter)) and do a push notif)
+            } else if (checkedBtn == R.id.AddToWL_rb) {
+                Toast.makeText(requireContext(), "Added to WishList", Toast.LENGTH_SHORT).show()
+                //TODO: add the other stuff clicking "Add to Wishlist" is supposed to do
+                // (add to the list (make sure their placement in the list is saved into the Game instance w/ the list name
+                // (it's the listBelong map parameter)) and do a push notif)
+            }
+
+        }
 
         //webView setup
         trailerVid.settings.javaScriptEnabled = true
