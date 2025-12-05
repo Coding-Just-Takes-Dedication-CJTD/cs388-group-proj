@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 private const val TAG = "HomeFragment"
 
@@ -33,15 +34,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // --- Set greeting to user's email ---
-        val greetingTextView = view.findViewById<TextView>(R.id.homePageHdr)
+        greetingTextView = view.findViewById<TextView>(R.id.homePageHdr)
         val currentUser = FirebaseAuth.getInstance().currentUser
-        greetingTextView.text = if (currentUser != null) {
-            val email = currentUser.email ?: "user"
-            val username = email.substringBefore("@") //show only username from email
-            "Hello $username!"
-        } else {
-            "Hello user!"
-        }
+        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+        updateGreeting()
+
 
         // Find the "boxes"
         val trendingBox = view.findViewById<View>(R.id.trendPlacehldr)
@@ -89,10 +87,40 @@ class HomeFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        // call the helper function so the name stays correct even if the app resumes
+        updateGreeting()
+    }
+
+    // --- NEW: Helper function to fetch the name ---
+    // This keeps our code clean and reusable
+    private fun updateGreeting() {
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val email = currentUser?.email ?: "user"
-        val username = email.substringBefore("@")
-        greetingTextView?.text = "Hello $username!"
+        val db = FirebaseFirestore.getInstance()
+
+        if (currentUser != null) {
+            db.collection("users").document(currentUser.uid).get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        // Try to get the real username
+                        val savedName = document.getString("username")
+                        // Note: We use greetingTextView? because we are in a callback
+                        greetingTextView?.text = "Hello $savedName!"
+                    } else {
+                        // Fallback to email if database fetch fails/is empty
+                        val email = currentUser.email ?: "User"
+                        val fallbackName = email.substringBefore("@")
+                        greetingTextView?.text = "Hello $fallbackName!"
+                    }
+                }
+                .addOnFailureListener {
+                    // Safety fallback if internet fails
+                    val email = currentUser.email ?: "User"
+                    val fallbackName = email.substringBefore("@")
+                    greetingTextView?.text = "Hello $fallbackName!"
+                }
+        } else {
+            greetingTextView?.text = "Hello user!"
+        }
     }
 
     //necessary for initializing in MainActivity

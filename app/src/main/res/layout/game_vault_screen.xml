@@ -20,20 +20,26 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.05" />
 
-    <TextView
-        android:id="@+id/vaultContentPlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="580dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Vault Content (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vaultList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gvTitle"
-        app:layout_constraintVertical_bias="0.1" />
+        tools:listitem="@layout/game_rv_item" />
+
+    <ProgressBar
+        android:id="@+id/vaultProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

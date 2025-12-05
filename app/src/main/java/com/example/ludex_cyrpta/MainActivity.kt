@@ -187,10 +187,13 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
         bottomNav.visibility = View.GONE
 
-        val detailsFrag = GameDetailsFragment.newInstance(game.name)
+        val detailsFrag = GameDetailsFragment.newInstance(game.name, game.id)
+
         val fragTransaction = supportFragmentManager.beginTransaction()
         actvFrag?.let { fragTransaction.hide(it) }
-        fragTransaction.add(R.id.mainScreen, detailsFrag, "GAME_DETAILS_${game.name.hashCode()}")
+
+        //unique id to differentiate fragments
+        fragTransaction.add(R.id.mainScreen, detailsFrag, "GAME_DETAILS_${game.id}")
         fragTransaction.addToBackStack(null)
         fragTransaction.commit()
 
@@ -210,6 +213,8 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             }
         }
     }
+
+
 
 
 }
