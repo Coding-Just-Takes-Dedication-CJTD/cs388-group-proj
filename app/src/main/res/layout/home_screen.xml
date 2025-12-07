@@ -6,17 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="370dp"
-        android:layout_height="50dp"
-        android:background="@drawable/search_view_bg"
+    <ImageView
+        android:id="@+id/logo_homepage"
+        android:layout_width="347dp"
+        android:layout_height="317dp"
+        android:src="@drawable/ludexcrypta_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homePageHdr"
-        app:layout_constraintVertical_bias="0.015" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.367" />
 
     <TextView
         android:id="@+id/homePageHdr"
@@ -28,41 +27,10 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.198"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.036" />
+        app:layout_constraintTop_toBottomOf="@+id/logo_homepage"
+        app:layout_constraintVertical_bias="0.032" />
 
-    <TextView
-        android:id="@+id/trendPlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="230dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Trending (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintVertical_bias="0.065" />
-
-    <TextView
-        android:id="@+id/gvPlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="280dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Game Vault (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendPlacehldr"
-        app:layout_constraintVertical_bias="0.396" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

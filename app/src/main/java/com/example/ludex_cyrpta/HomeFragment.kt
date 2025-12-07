@@ -44,48 +44,9 @@ class HomeFragment : Fragment() {
         }
 
         // Find the "boxes"
-        val trendingBox = view.findViewById<View>(R.id.trendPlacehldr)
-        val vaultBox = view.findViewById<View>(R.id.gvPlacehldr)
-        val searchBar = view.findViewById<SearchView>(R.id.searchView)
         val act = activity as MainActivity
         val bottomNav = act.findViewById<BottomNavigationView>(R.id.bottomNav)
 
-        // When clicked → tell MainActivity to swap fragments
-        trendingBox.setOnClickListener {
-            val frag = act.supportFragmentManager.findFragmentByTag("TRENDS")
-
-            frag?.let {
-                act.swapFrag(it)
-                bottomNav.selectedItemId = R.id.trendingPage
-                Log.d(TAG, "Swapped to TrendingFragment successfully!")
-            } ?: run {
-                Log.e(TAG, "TrendingFragment not found with tag TRENDS")
-            }
-        }
-
-        vaultBox.setOnClickListener {
-            val frag = act.supportFragmentManager.findFragmentByTag("VAULT_WISH")
-
-            frag?.let {
-                act.swapFrag(it)
-                bottomNav.selectedItemId = R.id.vault_wishlistPage
-                Log.d(TAG, "Swapped to VaultWishlistFragment successfully!")
-            } ?: run {
-                Log.e(TAG, "VaultWishlistFragment not found with tag VAULT_WISH")
-            }
-        }
-
-        searchBar.setOnClickListener {
-            val frag = act.supportFragmentManager.findFragmentByTag("SEARCH")
-
-            frag?.let {
-                act.swapFrag(it)
-                bottomNav.selectedItemId = R.id.searchPage
-                Log.d(TAG, "Swapped to SearchFragment successfully!")
-            } ?: run {
-                Log.e(TAG, "SearchFragment not found with tag SEARCH")
-            }
-        }
     }
     override fun onResume() {
         super.onResume()
