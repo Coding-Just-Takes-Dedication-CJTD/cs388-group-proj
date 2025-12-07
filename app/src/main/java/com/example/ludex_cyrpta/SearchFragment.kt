@@ -110,11 +110,16 @@ class SearchFragment : Fragment() {
         })
 
         setupObservers() //reacts to data changes from the ViewModel
+
+        if (viewModel.gameList.value.isNullOrEmpty()) {
+            Log.d(TAG, "Game list is empty, initializing data fetch...")
+            viewModel.fetchGameListData("games")
+        }
     }
 
     private fun setupObservers() {
         viewModel.gameList.observe(viewLifecycleOwner, Observer { games ->
-            Log.i(TAG, "Received ${games.size} from ViewModel. Updating...")
+            Log.i(TAG, "Received ${games.size} games from ViewModel. Updating...")
             adapter.submitList(games)
         })
 

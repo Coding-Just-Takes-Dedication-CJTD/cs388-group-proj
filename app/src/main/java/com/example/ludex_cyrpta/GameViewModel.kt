@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.net.URI
 
 private const val TAG = "GameViewModel"
 
@@ -48,7 +49,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     init {
         _isLoading.value = false
         _errMsg.value = null
-        fetchGameListData("games")
     }
 
     fun loadMoreGames() {
@@ -76,7 +76,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         try {
-            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort name asc; limit $pageBuffer; offset $offset; where websites.trusted = true;"
+            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort name asc; limit $pageBuffer; offset $offset;"
             val respBody = makeRequest(accessToken, endpoint, query)
             val newGamesGen = parseResponse(respBody)
 
@@ -143,7 +143,39 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 _isLoading.postValue(false)
             }
         }
+    }
 
+    fun fetchTrendingGames(endpoint: String) {
+        scope.launch {
+            _isLoading.postValue(true)
+            _errMsg.postValue(null)
+            _gameList.postValue(emptyList())
+
+            val accessToken: String
+            try {
+                accessToken = authService.tokenCheck()
+                Log.i(TAG, "Token fetched successfully.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Cannot fetch token. Error: ${e.message}", e)
+                _errMsg.postValue("Auth Failed: ${e.message}")
+                _isLoading.postValue(false)
+                return@launch
+            }
+
+            try {
+                val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort total_rating desc; where total_rating_count > 50; limit 20;"
+                val respBody = makeRequest(accessToken, endpoint, query)
+                val trendingGen = parseResponse(respBody)
+                _gameList.postValue(trendingGen)
+
+                Log.i(TAG, "Fetch of Trending Games was successful")
+            } catch (e: Exception) {
+                Log.e(TAG, "Fetch failed: ${e.message}", e)
+                _errMsg.postValue("Data Fetch Failed: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
     }
 
     private fun getNames(jsonOBJ: JSONObject, fieldName: String, fieldType: String = "name"): List<String> {
@@ -272,7 +304,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 //14. website link generation
                 val webLink = if (jsonOBJ.has("websites")) {
                     val webARR = jsonOBJ.optJSONArray("websites")
-                    webARR?.optJSONObject(0)?.optString("url") ?: ""
+                    sanitizeURL(webARR?.optJSONObject(0)?.optString("url") ?: "")
                 } else {
                     ""
                 }
@@ -303,6 +335,40 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to parse JSON response.", e)
             return null
+        }
+    }
+
+    //sanitize URL since we removed the "websites.trusted = true;" condition from the query (it grossly limited game result)
+    private fun sanitizeURL(url: String): String {
+        if (url.isEmpty() || url.isBlank()) return ""
+        val trimmedURL = url.trim().filter { it >= ' ' }
+
+        val cleanedByURI = try {
+            URI(trimmedURL)
+        } catch (err: Exception) {
+            Log.e(TAG, "Malformed URL \"$url\" rejected", err)
+            return ""
+        }
+
+        if (trimmedURL.startsWith("//")) {
+            Log.w(TAG, "URL \"$url\" rejected due to protocol-relative nature")
+            return ""
+        }
+
+        val scheme = cleanedByURI.scheme?.lowercase(Locale.ROOT)
+        when (scheme) {
+            "http", "https" -> {
+                if (trimmedURL.lowercase(Locale.ROOT).startsWith("$scheme://")) return cleanedByURI.normalize().toString()
+                else {
+                    Log.w(TAG, "Rejected malformed smuggled scheme in \"$url\"")
+                    return ""
+                }
+            }
+            null -> { return "https://$trimmedURL" }
+            else -> {
+                Log.w(TAG, "Blocked unsafe URL scheme: $scheme within $url")
+                return ""
+            }
         }
     }
 

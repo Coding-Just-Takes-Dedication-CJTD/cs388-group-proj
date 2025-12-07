@@ -106,8 +106,6 @@ data class Game(
 
     ✅ -- websites -> websites associated with the game; type: array of Website IDs (Int)
         API endpoint "https://api.igdb.com/v4/websites" fields:
-            trusted --> is the site trusted or not; type: boolean
             url --> URL of website; type: String
         <<TODO: "websites.url" returns both id & url so grab only the first url>>
-        <<TODO: DON'T FORGET TO ADD "where website.trusted = true;" to end of all queries that pull the website
  */
