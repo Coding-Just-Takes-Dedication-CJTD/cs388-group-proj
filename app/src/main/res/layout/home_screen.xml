@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     tools:context=".HomeFragment">
-
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="370dp"
-        android:layout_height="50dp"
-        android:background="@drawable/search_view_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homePageHdr"
-        app:layout_constraintVertical_bias="0.015" />
 
     <TextView
         android:id="@+id/homePageHdr"
@@ -26,43 +16,56 @@
         android:text="Hello {user}!"
         android:textSize="50sp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.198"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.036" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="370dp"
+        android:layout_height="50dp"
+        android:background="?attr/colorSurface"
+        android:elevation="6dp"
+        android:queryHint="Search games..."
+        app:layout_constraintTop_toBottomOf="@id/homePageHdr"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.015" />
 
     <TextView
         android:id="@+id/trendPlacehldr"
         android:layout_width="370dp"
         android:layout_height="230dp"
-        android:background="@drawable/placeholder_bg"
+        android:background="?attr/colorSurface"
+        android:elevation="4dp"
         android:gravity="center_horizontal|top"
+        android:paddingTop="12dp"
         android:text="Trending (placeholder)"
-        android:textSize="20dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.065" />
 
     <TextView
         android:id="@+id/gvPlacehldr"
         android:layout_width="370dp"
         android:layout_height="280dp"
-        android:background="@drawable/placeholder_bg"
+        android:background="?attr/colorSurface"
+        android:elevation="4dp"
         android:gravity="center_horizontal|top"
+        android:paddingTop="12dp"
         android:text="Game Vault (placeholder)"
-        android:textSize="20dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintTop_toBottomOf="@id/trendPlacehldr"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendPlacehldr"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.396" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

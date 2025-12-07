@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground">
 
+    <!-- GAME TITLE -->
     <TextView
         android:id="@+id/gameTitleTV"
         android:layout_width="0dp"
@@ -13,13 +15,14 @@
         android:text="Title"
         android:textSize="50sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.099" />
 
+    <!-- RATING -->
     <TextView
         android:id="@+id/gameRatingTV"
         android:layout_width="0dp"
@@ -28,13 +31,12 @@
         android:text="Rating:"
         android:textSize="20sp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/gameTitleTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- RELEASE DATE -->
     <TextView
         android:id="@+id/gameReleaseDateTV"
         android:layout_width="0dp"
@@ -43,13 +45,12 @@
         android:text="Release Date:"
         android:textSize="20sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/gameRatingTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- GENRES -->
     <TextView
         android:id="@+id/genresListTV"
         android:layout_width="0dp"
@@ -57,13 +58,12 @@
         android:gravity="center"
         android:text="Genres:"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/gameReleaseDateTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- THEMES -->
     <TextView
         android:id="@+id/themeListTV"
         android:layout_width="0dp"
@@ -71,13 +71,12 @@
         android:gravity="center"
         android:text="Themes:"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/genresListTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- GAME MODES -->
     <TextView
         android:id="@+id/gameModesTV"
         android:layout_width="0dp"
@@ -86,13 +85,12 @@
         android:text="Game Mode(s):"
         android:textSize="16sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/themeListTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- PLATFORMS -->
     <TextView
         android:id="@+id/platformListTV"
         android:layout_width="0dp"
@@ -101,13 +99,12 @@
         android:text="Platform(s):"
         android:textSize="16sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/gameModesTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- OTHER SERVICES -->
     <TextView
         android:id="@+id/otherServicesTV"
         android:layout_width="0dp"
@@ -116,72 +113,66 @@
         android:text="Also Available at:"
         android:textSize="16sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/platformListTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- GAME LINK -->
     <TextView
         android:id="@+id/gameLinkTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:autoLink="web"
         android:gravity="center"
-        android:linksClickable="true"
         android:text="https://"
-        android:textColorLink="#2196F3"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:linksClickable="true"
+        android:textColorLink="?attr/colorPrimary"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toBottomOf="@id/otherServicesTV"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- TRENDING BADGE -->
     <TextView
         android:id="@+id/trendingView"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="#2DA032"
         android:gravity="center"
         android:text="TRENDING"
-        android:textColor="#FFFFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
+        android:background="?attr/colorSurface"
         app:layout_constraintTop_toBottomOf="@id/gameLinkTV"
-        app:layout_constraintVertical_bias="0.024" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <WebView
         android:id="@+id/trailerView"
         android:layout_width="325dp"
         android:layout_height="185dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trendingView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendingView"
-        app:layout_constraintVertical_bias="0.057" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- DESCRIPTION HEADER -->
     <TextView
         android:id="@+id/descriptionHdr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:text="Description"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/trailerView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trailerView"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+
+    <!-- DESCRIPTION -->
     <TextView
         android:id="@+id/descriptionTV"
         android:layout_width="325dp"
@@ -189,67 +180,60 @@
         android:gravity="center_horizontal"
         android:scrollbars="vertical"
         android:textSize="15sp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum cursus ornare nisi vel rhoncus. Quisque non volutpat odio, et cursus nunc. Integer pharetra posuere nulla at faucibus. Donec pulvinar velit eleifend lobortis commodo. Proin euismod dolor id magna consectetur viverra. Sed sollicitudin velit vitae nisi iaculis, varius dictum lacus rutrum. Ut consequat cursus nisl."
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@id/descriptionHdr"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionHdr"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- BACK BUTTON -->
     <Button
         android:id="@+id/gameBackBtn"
         android:layout_width="132dp"
         android:layout_height="50dp"
         android:text="BACK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.057"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- ERROR POPUP -->
     <TextView
         android:id="@+id/errorPopUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
         android:text="This is an example of an error!!"
-        android:textColor="#FFFF00"
         android:textSize="40sp"
         android:textAllCaps="true"
         android:textStyle="bold"
-        android:background="#FF0000"
+        android:padding="8dp"
         android:gravity="center"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_red_dark"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- PROGRESS BAR -->
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:indeterminate="true"
         android:theme="@style/Widget.AppCompat.ProgressBar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- RADIO GROUP -->
     <RadioGroup
         android:id="@+id/listAdd_RG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descriptionTV"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <RadioButton
             android:id="@+id/AddToWL_rb"
@@ -257,7 +241,7 @@
             android:layout_height="wrap_content"
             android:text="Add to Wishlist"
             android:textSize="18sp"
-            android:layout_marginRight="7dp"/>
+            android:textColor="?android:attr/textColorPrimary" />
 
         <RadioButton
             android:id="@+id/AddToGV_rb"
@@ -265,9 +249,7 @@
             android:layout_height="wrap_content"
             android:text="Add to Game Vault"
             android:textSize="18sp"
-            android:layout_marginLeft="7dp"/>
+            android:textColor="?android:attr/textColorPrimary" />
     </RadioGroup>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="400dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:paddingLeft="15dp"
     android:paddingBottom="15dp"
-    android:background="@drawable/game_item_bg"
-    android:layout_marginBottom="15dp">
+    android:layout_marginBottom="15dp"
+    android:background="?attr/colorSurface"
+    android:elevation="4dp">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="90dp"
         android:layout_height="128dp"
         android:layout_marginTop="15dp"
+        android:contentDescription="Game Cover"
+        android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
@@ -25,8 +29,9 @@
         android:layout_marginTop="25dp"
         android:layout_marginStart="10dp"
         android:text="Game Name"
-        android:textAppearance="?attr/textAppearanceListItem"
         android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,10 +39,11 @@
         android:id="@+id/ratingHdr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Rating:"
         android:textStyle="bold"
         android:layout_marginStart="10dp"
-        android:text="Rating:"
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
@@ -46,7 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5.0"
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="14sp"
         android:paddingLeft="4dp"
         app:layout_constraintStart_toEndOf="@+id/ratingHdr"
         app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -56,9 +63,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textStyle="bold"
         android:text="Released:"
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/ratingHdr" />
 
@@ -67,7 +75,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="November 21, 2025"
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="14sp"
         android:paddingLeft="4dp"
         app:layout_constraintStart_toEndOf="@+id/releaseDateHdr"
         app:layout_constraintTop_toBottomOf="@+id/ratingHdr" />
@@ -78,11 +87,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
+        android:text="This is a short summary of the game..."
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="This is a common game summary to illustrate how the ellipsize function in TextView works."
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="?android:attr/textColorSecondary"
         android:textStyle="italic"
+        android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/releaseDateHdr" />
 

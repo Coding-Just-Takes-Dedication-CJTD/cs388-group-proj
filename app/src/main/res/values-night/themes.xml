@@ -1,7 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.LudexCyrpta" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Dark theme surface + text colors -->
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="android:textColor">@color/text_primary_dark</item>
+
+        <!-- (Optional) Background if needed -->
+        <item name="android:colorBackground">@color/background_dark</item>
     </style>
+
+    <style name="Theme.LudexCyrpta" parent="Base.Theme.LudexCyrpta" />
 </resources>
