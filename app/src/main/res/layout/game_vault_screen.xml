@@ -32,6 +32,21 @@
         app:layout_constraintTop_toBottomOf="@+id/gvTitle"
         tools:listitem="@layout/game_rv_item" />
 
+    <TextView
+        android:id="@+id/emptyVaultMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No games added to Vault.\nAdd some games!"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:textColor="#888888"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gvTitle" />
+
     <ProgressBar
         android:id="@+id/vaultProgressBar"
         android:layout_width="wrap_content"

@@ -8,15 +8,15 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGame(game: LocalGame)
 
-    // Get a specific game (for Details Page)
+    // Get specific game (Game Details Page)
     @Query("SELECT * FROM saved_games WHERE id = :gameId")
     suspend fun getGameById(gameId: Int): LocalGame?
 
-    // Get all Vault games (for Vault Page)
+    // Get all Vault games (Vault Page)
     @Query("SELECT * FROM saved_games WHERE inVault = 1")
     suspend fun getVaultGames(): List<LocalGame>
 
-    // Get all Wishlist games (for Wishlist Page)
+    // Get all Wishlist games (Wishlist Page)
     @Query("SELECT * FROM saved_games WHERE inWishlist = 1")
     suspend fun getWishlistGames(): List<LocalGame>
 }

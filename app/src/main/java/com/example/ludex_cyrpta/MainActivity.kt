@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import android.Manifest // <--- Needed for permission constants
+import android.content.Context
 import android.content.pm.PackageManager // <--- Needed to check permission status
 import android.os.Build // <--- Needed to check Android version
 import androidx.activity.result.contract.ActivityResultContracts // <--- Needed for the new way to ask permissions
@@ -75,6 +76,11 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // --- NEW: Trigger Notification if User is Logged In ---
+        if (auth.currentUser != null) {
+            sendLoginNotification()
         }
 
         val fragMngr: FragmentManager = supportFragmentManager
@@ -214,6 +220,41 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         }
     }
 
+    // NEW: Function to send the "Welcome" notification
+    private fun sendLoginNotification() {
+        //Check Permission (Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
+                return // If we don't have permission, stop here.
+            }
+        }
+
+        // 2. Define the ID and Channel
+        val channelId = "ludex_login_channel"
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+        // 3. Create Channel (Required for Android 8+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                channelId,
+                "Login Updates",
+                android.app.NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // 4. Build the Notification
+        val notificationBuilder = androidx.core.app.NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
+            .setContentTitle("Welcome to Ludex Crypta!")
+            .setContentText("We hope you enjoy your experience.")
+            .setAutoCancel(true)
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+
+        // 5. Show it! (ID = 777 is just a random number to identify this message)
+        notificationManager.notify(777, notificationBuilder.build())
+    }
 
 
 

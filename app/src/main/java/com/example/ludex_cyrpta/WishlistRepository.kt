@@ -19,14 +19,14 @@ class WishlistRepository(context: Context) {
     private val gameDao = AppDatabase.getDatabase(context).gameDao()
     private val TAG = "WishlistRepository"
 
-    // 1. Add to Wishlist
+    //Add to Wishlist
     fun addGameToWishlist(game: Game, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val currentUser = auth.currentUser
 
-        // A. Save Locally
+        // Save Locally
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // IMPORTANT: Set inWishlist = true
+                // Set inWishlist = true: ensures that the game is saved visually even in offline app usage
                 val localGame = game.toLocalGame().apply { inWishlist = true }
                 gameDao.insertGame(localGame)
                 Log.d(TAG, "Saved to local Wishlist DB")
@@ -60,12 +60,11 @@ class WishlistRepository(context: Context) {
             .addOnFailureListener { e -> onFailure(e.message ?: "Error adding to wishlist") }
     }
 
-    // 2. Remove from Wishlist
+    //  Remove from Wishlist
     fun removeGameFromWishlist(gameId: Int, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val currentUser = auth.currentUser
 
-        // A. Remove Locally (We update the flag to false instead of deleting the whole row,
-        // in case it's also in the Vault!)
+        // Remove Locally: We update the flag to false instead of deleting the whole row, in case it's also in the Vault
         CoroutineScope(Dispatchers.IO).launch {
             val game = gameDao.getGameById(gameId)
             if (game != null) {
@@ -86,7 +85,7 @@ class WishlistRepository(context: Context) {
     }
 
 
-    // 3. Check status
+    // Check status
     fun isGameInWishlist(gameId: Int, onResult: (Boolean) -> Unit) {
         val currentUser = auth.currentUser ?: return
         db.collection("users")
@@ -98,19 +97,19 @@ class WishlistRepository(context: Context) {
             .addOnFailureListener { onResult(false) }
     }
 
-    // 4. Get all Wishlist games
+    // Get all Wishlist games
     fun getWishlistGames(onResult: (List<Game>) -> Unit, onFailure: (String) -> Unit) {
-        // A. Try Local First
+        // Try Local First
         CoroutineScope(Dispatchers.IO).launch {
             val localGames = gameDao.getWishlistGames()
             if (localGames.isNotEmpty()) {
-                // If we have data, show it immediately!
+                // If we have data, show it
                 val games = localGames.map { it.toGame() }
                 CoroutineScope(Dispatchers.Main).launch {
                     onResult(games)
                 }
             } else {
-                // B. If Local is empty, fetch from Cloud (existing logic)
+                // If Local is empty, fetch from Cloud (existing logic)
                 fetchFromCloud(onResult, onFailure)
             }
         }
@@ -138,7 +137,7 @@ class WishlistRepository(context: Context) {
                             synopsis = document.getString("synopsis") ?: ""
                         )
                         gameList.add(game)
-                        // Optional: Save these to local DB now for next time
+                        // Save these to local DB now for next time
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing game", e)
                     }
@@ -148,7 +147,7 @@ class WishlistRepository(context: Context) {
             .addOnFailureListener { e -> onFailure(e.message ?: "Error fetching wishlist") }
     }
 
-    private fun Game.toLocalGame(): LocalGame {
+    private fun Game.toLocalGame(): LocalGame {  //local  offline save
         return LocalGame(
             id = this.id,
             name = this.name,
@@ -167,7 +166,7 @@ class WishlistRepository(context: Context) {
         )
     }
 
-    private fun LocalGame.toGame(): Game {
+    private fun LocalGame.toGame(): Game { // online
         return Game(
             id = this.id,
             name = this.name,

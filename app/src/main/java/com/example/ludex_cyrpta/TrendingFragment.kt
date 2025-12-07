@@ -19,7 +19,7 @@ class TrendingFragment : Fragment() {
     private lateinit var adapter: GameAdapter
     private var gameSelectedListener: OnGameSelectedListener? = null
 
-    // 1. Attach listener so clicks work
+    // Attach listener so clicks work
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnGameSelectedListener) {

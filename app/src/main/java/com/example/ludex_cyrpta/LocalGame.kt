@@ -2,7 +2,7 @@ package com.example.ludex_cyrpta
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+//save user's games locally on device
 @Entity(tableName = "saved_games")
 data class LocalGame(
     @PrimaryKey val id: Int,

@@ -27,7 +27,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val loginBtn = view.findViewById<Button>(R.id.loginBtn)
         val toRegister = view.findViewById<TextView>(R.id.goToRegister)
 
-        // --- Login button ---
+        // Login button
         loginBtn.setOnClickListener {
             val e = email.text.toString().trim()
             val p = pass.text.toString().trim()
@@ -44,13 +44,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val mainAct = requireActivity() as MainActivity
                     val fragMngr = mainAct.supportFragmentManager
 
-                    // --- Clear all previous fragments ---
+                    // Clear all previous fragments
                     fragMngr.popBackStack(
                         null,
                         FragmentManager.POP_BACK_STACK_INCLUSIVE
                     )
 
-                    // --- Navigate to existing HomeFragment so hidden fragments aren't destroyed ---
+                    // Navigate to existing HomeFragment so hidden fragments aren't destroyed
                     var homeFrag = fragMngr.findFragmentByTag("HOME")
 
                     if (homeFrag != null) {
@@ -69,7 +69,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
         }
 
-        // --- Go to RegisterFragment ---
+        // Go to RegisterFragment
         toRegister.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.mainScreen, RegisterFragment())

@@ -27,7 +27,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val registerBtn = view.findViewById<Button>(R.id.registerBtn)
         val toLogin = view.findViewById<TextView>(R.id.goToLogin)
 
-        // --- Register button ---
+        // Register button
         registerBtn.setOnClickListener {
             val uName = usernameInput.text.toString().trim() // Get Username
             val e = email.text.toString().trim()
@@ -44,7 +44,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 return@setOnClickListener
             }
 
-// ... inside the registerBtn listener ...
+// inside the registerBtn listener
             auth.createUserWithEmailAndPassword(e, p)
                 .addOnSuccessListener { result -> // --- FIX 2: Added "result ->" so we can use it below
 
@@ -81,7 +81,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 }
         }
 
-        // --- Go to login text ---
+        // Go back to Login Screen
         toLogin.setOnClickListener {
             // Clear RegisterFragment from back stack and go back to login
             parentFragmentManager.popBackStack()

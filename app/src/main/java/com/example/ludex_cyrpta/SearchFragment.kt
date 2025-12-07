@@ -101,7 +101,7 @@ class SearchFragment : Fragment() {
 
 
 
-        //TODO: for Chidi, do stuff with searchBar here, might involve updating ViewModel
+
 
         //create adapter with empty list
         adapter = GameAdapter { game ->

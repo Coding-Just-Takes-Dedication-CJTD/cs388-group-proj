@@ -61,14 +61,31 @@ class GameVaultFragment : Fragment() {
 
     private fun loadVaultGames() {
         progressBar.visibility = View.VISIBLE
+
+        // Find the views we need to toggle
+        val emptyMsg = view?.findViewById<android.view.View>(R.id.emptyVaultMsg)
+        val listView = view?.findViewById<android.view.View>(R.id.vaultList)
+
         vaultRepo.getVaultGames(
             onResult = { games ->
                 progressBar.visibility = View.GONE
-                adapter.submitList(games)
+
+                if (games.isEmpty()) {
+                    // List is empty -> Hide list, Show message
+                    listView?.visibility = View.GONE
+                    emptyMsg?.visibility = View.VISIBLE
+                } else {
+                    // List has games -> Show list, Hide message
+                    listView?.visibility = View.VISIBLE
+                    emptyMsg?.visibility = View.GONE
+                    adapter.submitList(games)
+                }
             },
             onFailure = { error ->
-                progressBar.visibility = View.GONE
-                Toast.makeText(context, "Error loading vault: $error", Toast.LENGTH_SHORT).show()
+                activity?.runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(context, "Error loading vault: $error", Toast.LENGTH_SHORT).show()
+                }
             }
         )
     }

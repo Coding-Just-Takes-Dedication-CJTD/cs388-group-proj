@@ -22,6 +22,6 @@ abstract class AppDatabase : RoomDatabase() {
                     "ludex_local_db"
                 ).build().also { instance = it }
             }
-        }
+        } // locally save games
     }
 }

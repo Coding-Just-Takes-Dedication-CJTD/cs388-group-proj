@@ -201,16 +201,56 @@
         app:layout_constraintVertical_bias="0.547" />
 
     <Button
+        android:id="@+id/wishListAddBtn"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Add to Wishlist"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:backgroundTint="@android:color/white"
+        app:strokeColor="#FF000000"
+        app:strokeWidth="2dp"
+        app:cornerRadius="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTV" />
+
+    <Button
+        android:id="@+id/vaultListAddBtn"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Add to Vault"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:backgroundTint="@android:color/white"
+        app:strokeColor="#FF000000"
+        app:strokeWidth="2dp"
+        app:cornerRadius="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wishListAddBtn"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
         android:id="@+id/gameBackBtn"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="BACK"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:backgroundTint="@android:color/white"
+        app:strokeColor="#FF000000"
+        app:strokeWidth="2dp"
+        app:cornerRadius="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.1" />
+        app:layout_constraintTop_toTopOf="@+id/wishListAddBtn"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/errorPopUp"
@@ -231,31 +271,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"/>
-
-    <Button
-        android:id="@+id/vaultListAddBtn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#4CAF50"
-        android:text="Add to Vault"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.9" />
-
-    <Button
-        android:id="@+id/wishListAddBtn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="Add to Wishlist"
-        android:backgroundTint="#2196F3"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"

@@ -50,12 +50,27 @@ class WishlistFragment : Fragment() {
     }
 
     private fun loadWishlistGames() {
+        // Find views
+        val emptyMsg = view?.findViewById<android.view.View>(R.id.emptyWishlistMsg)
+        val listView = view?.findViewById<android.view.View>(R.id.wishList)
+
         wishRepo.getWishlistGames(
             onResult = { games ->
-                adapter.submitList(games)
+                if (games.isEmpty()) {
+                    // List is empty -> Hide list, Show message
+                    listView?.visibility = View.GONE
+                    emptyMsg?.visibility = View.VISIBLE
+                } else {
+                    // List has games -> Show list, Hide message
+                    listView?.visibility = View.VISIBLE
+                    emptyMsg?.visibility = View.GONE
+                    adapter.submitList(games)
+                }
             },
             onFailure = { error ->
-                Toast.makeText(context, "Error: $error", Toast.LENGTH_SHORT).show()
+                context?.let {
+                    Toast.makeText(it, "Error: $error", Toast.LENGTH_SHORT).show()
+                }
             }
         )
     }

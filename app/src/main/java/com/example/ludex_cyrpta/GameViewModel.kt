@@ -421,21 +421,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
 
-            // QUERY EXPLANATION:
-            // sort total_rating_count desc; -> Get the most discussed/rated games
-            // where total_rating >= 80;     -> Ensure they are actually rated (80+ score)
-            // limit 10;                     -> Only show the top 10 (Mini-list)
-           // val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort total_rating_count desc; where total_rating >= 80; limit 10;"
 
-            // 1. sort total_rating desc: Put the highest scores (99, 98, etc.) at the top.
-            // 2. where total_rating_count > 50: This is CRITICAL. It filters out obscure games
-            //    that have one single 100/100 review. We only want games with enough votes to matter.
-            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort total_rating desc; where total_rating_count > 50; limit 20;"
+
+            // sort total_rating desc: Put the highest scores (99, 98, etc.) at the top.
+            // where total_rating_count > 30: filters out obscure games that have one single 100/100 review, only want games with enough votes to matter
+            // want a top 50, so limit 50 results at the top when scrolling through
+            val query = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; sort total_rating desc; where total_rating_count > 30; limit 50;"
             try {
                 val respBody = makeRequest(accessToken, "games", query)
                 val games = parseResponse(respBody)
 
-                // Since this is a mini-list, we just overwrite the list
+                // overwrite the list
                 _gameList.value = games
             } catch (e: Exception) {
                 _errMsg.value = "Trending Fetch Failed: ${e.message}"

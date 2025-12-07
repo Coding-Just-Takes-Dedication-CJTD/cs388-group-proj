@@ -6,63 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="370dp"
-        android:layout_height="50dp"
-        android:background="@drawable/search_view_bg"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/homeLogoCard"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:cardCornerRadius="75dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homePageHdr"
-        app:layout_constraintVertical_bias="0.015" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3">
+
+        <ImageView
+            android:id="@+id/homeLogoImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/lc_v4" /> </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/homePageHdr"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Hello {user}!"
-        android:textSize="50sp"
+        android:text="Hello, {user}!"
+        android:textSize="40sp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.198"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.036" />
+        app:layout_constraintTop_toBottomOf="@id/homeLogoCard" />
 
-    <TextView
-        android:id="@+id/trendPlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="230dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Trending (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintVertical_bias="0.065" />
 
-    <TextView
-        android:id="@+id/gvPlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="280dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Game Vault (placeholder)"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendPlacehldr"
-        app:layout_constraintVertical_bias="0.396" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

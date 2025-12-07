@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.content.Context
+import kotlinx.coroutines.withContext
 
 
 class VaultRepository(context: Context) {
@@ -87,18 +88,18 @@ class VaultRepository(context: Context) {
 
     // full list of saved games for the Vault Fragment
     fun getVaultGames(onResult: (List<Game>) -> Unit, onFailure: (String) -> Unit) {
-        // A. Check Local DB First
+        //
         CoroutineScope(Dispatchers.IO).launch {
             val localList = gameDao.getVaultGames()
 
             if (localList.isNotEmpty()) {
-                Log.d(TAG, "Loaded ${localList.size} games from Local DB")
                 val games = localList.map { it.toGame() }
-                CoroutineScope(Dispatchers.Main).launch {
+
+                withContext(Dispatchers.Main) {
                     onResult(games)
                 }
             } else {
-                // B. If Local is empty, fetch from Firestore
+
                 fetchFromFirestore(onResult, onFailure)
             }
         }
@@ -107,7 +108,10 @@ class VaultRepository(context: Context) {
     private fun fetchFromFirestore(onResult: (List<Game>) -> Unit, onFailure: (String) -> Unit) {
         val currentUser = auth.currentUser
         if (currentUser == null) {
-            onFailure("No user logged in")
+            // Switch to Main thread before reporting failure
+            CoroutineScope(Dispatchers.Main).launch {
+                onFailure("No user logged in")
+            }
             return
         }
 
@@ -129,15 +133,19 @@ class VaultRepository(context: Context) {
                             synopsis = document.getString("synopsis") ?: ""
                         )
                         gameList.add(game)
-
+                        // Optional: Save to local DB here for next time
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing game: ${e.message}")
                     }
                 }
+                // Firebase listeners usually run on Main, force it to be safe
                 onResult(gameList)
             }
-            .addOnFailureListener { e -> onFailure(e.message ?: "Error fetching vault") }
+            .addOnFailureListener { e ->
+                onFailure(e.message ?: "Error fetching vault")
+            }
     }
+
 
 
 

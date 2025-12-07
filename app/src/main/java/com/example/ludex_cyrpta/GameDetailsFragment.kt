@@ -74,32 +74,11 @@ class GameDetailsFragment : Fragment() {
 
 
 
-        //TODO: initialize wishListAddBtn AND vaultListAddBtn
+
 
         vaultListAddBtn = view.findViewById(R.id.vaultListAddBtn)
         wishListAddBtn = view.findViewById(R.id.wishListAddBtn)
 
-        /*vaultListAddBtn.setOnClickListener {
-            val currentGame = viewModel.gameObj.value
-            if (currentGame != null) {
-                vaultListAddBtn.isEnabled = false
-                vaultListAddBtn.text = "Adding..."
-
-                vaultRepo.addGameToVault(currentGame,
-                    onSuccess = {
-                        // Success: Update UI
-                        vaultListAddBtn.text = "In Vault"
-                    },
-                    onFailure = { error ->
-                        // Failure: Reset UI and show error
-                        vaultListAddBtn.isEnabled = true
-                        vaultListAddBtn.text = "Add to Vault"
-                        errorMsg.text = "Save failed: $error"
-                        errorMsg.visibility = View.VISIBLE
-                    }
-                )
-            }
-        } */
 
         errorMsg = view.findViewById(R.id.errorPopUp)
 
@@ -107,7 +86,7 @@ class GameDetailsFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        //TODO: add the setOnClickListeners for the other 2 buttons
+
 
         //webView setup
         trailerVid.settings.javaScriptEnabled = true
@@ -134,7 +113,7 @@ class GameDetailsFragment : Fragment() {
 
         //make sure all conditional views are gone at start
         errorMsg.visibility = View.GONE
-        trendBox.visibility = View.GONE //TODO: update this once TRENDING ALGO is figured out
+        trendBox.visibility = View.GONE
         progBar.visibility = View.GONE
 
         setupObservers()
@@ -194,18 +173,6 @@ class GameDetailsFragment : Fragment() {
                     vidLayout.verticalBias = 0.toFloat()
                     trailerVid.visibility = View.GONE
                 }
-                /*vaultRepo.isGameInVault(game.id) { exists ->
-                    if (exists) {
-                        vaultListAddBtn.text = "In Vault"
-                        vaultListAddBtn.isEnabled = false
-                        vaultListAddBtn.setBackgroundColor(android.graphics.Color.GRAY)
-                    } else {
-                        vaultListAddBtn.text = "Add to Vault"
-                        vaultListAddBtn.isEnabled = true
-                        // Optional: Reset color to default green if needed
-                        // vaultListAddBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")))
-                    }
-                }*/
 
                 //hide progress bar & clear lingering errors
                 errorMsg.visibility = View.GONE
@@ -277,8 +244,8 @@ class GameDetailsFragment : Fragment() {
                 // STATE: Game is NOT saved. Button should allow ADDING it.
                 vaultListAddBtn.text = "Add to Vault"
                 vaultListAddBtn.isEnabled = true
-                // Reset color (assuming default is Green/Theme color)
-                vaultListAddBtn.setBackgroundColor(android.graphics.Color.parseColor("#4CAF50"))
+                // Reset color to white (matches app theme)
+                vaultListAddBtn.setBackgroundColor(android.graphics.Color.parseColor("#FFFFFF"))
 
                 // Set click listener to ADD
                 vaultListAddBtn.setOnClickListener {
@@ -305,7 +272,7 @@ class GameDetailsFragment : Fragment() {
         wishRepo.isGameInWishlist(game.id) { exists ->
             if (exists) {
                 // STATE: In Wishlist -> Show "Remove" (Red)
-                wishListAddBtn.text = "Remove Wishlist"
+                wishListAddBtn.text = "Remove from Wishlist"
                 wishListAddBtn.isEnabled = true
                 wishListAddBtn.setBackgroundColor(android.graphics.Color.RED)
 
@@ -316,7 +283,7 @@ class GameDetailsFragment : Fragment() {
                         onSuccess = { checkWishlistStatus(game) },
                         onFailure = {
                             wishListAddBtn.isEnabled = true
-                            wishListAddBtn.text = "Remove Wishlist"
+                            wishListAddBtn.text = "Remove from Wishlist"
                         }
                     )
                 }
@@ -324,8 +291,7 @@ class GameDetailsFragment : Fragment() {
                 // STATE: Not in Wishlist -> Show "Add" (Blue)
                 wishListAddBtn.text = "Add to Wishlist"
                 wishListAddBtn.isEnabled = true
-                wishListAddBtn.setBackgroundColor(android.graphics.Color.parseColor("#2196F3")) // Blue
-
+                wishListAddBtn.setBackgroundColor(android.graphics.Color.parseColor("#FFFFFF")) // reset to original color white
                 wishListAddBtn.setOnClickListener {
                     wishListAddBtn.isEnabled = false
                     wishListAddBtn.text = "Adding..."
