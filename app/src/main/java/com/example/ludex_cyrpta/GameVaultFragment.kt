@@ -89,7 +89,6 @@ class GameVaultFragment : Fragment() {
         )
     }
 
-
     override fun onDetach() {
         super.onDetach()
         gameSelectedListener = null
