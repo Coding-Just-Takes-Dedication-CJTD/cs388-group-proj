@@ -52,7 +52,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val gameDao = AppDatabase.getDatabase(application).gameDao()
     
-    //private lateinit var trendingGamesList: MutableList<String>
+    //TODO: make this -> private lateinit var trendingGamesList: MutableList<String>
 
     // no list generation here because multiple fragments use GameViewModel
     init {
@@ -199,7 +199,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 val trendingGen = parseResponse(respBody)
                 _gameList.postValue(trendingGen)
                 
-                //save to trendingGamesList
+                //TODO: save to trendingGamesList so trending check can happen
                 
 
                 Log.i(TAG, "Fetch of Trending Games was successful")
@@ -414,7 +414,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                     ""
                 }
                 
-                //15. trending check
+                //15. TODO: trending check
 
 
                 //get full Game instance to populate GameDetails page and to
