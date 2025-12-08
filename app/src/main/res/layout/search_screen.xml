@@ -18,8 +18,7 @@
         app:layout_constraintHorizontal_bias="0.063"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchPageHdr"
-        app:layout_constraintVertical_bias="0.02"
-        app:queryHint="Search for a game..." />
+        app:layout_constraintVertical_bias="0.02" />
 
     <Button
         android:id="@+id/filtersBtn"
