@@ -160,7 +160,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 val gameDetail = parseDetailedResponse(respBody)
 
                 if (gameDetail == null) {
-                    throw GameNotFoundException("No game details found for '$gameName'. Name might be mispelled or unavailable.")
+                    throw GameNotFoundException("No game details found for '$gameName'. Name might be misspelled or unavailable.")
                 } else {
                     _gameObj.postValue(gameDetail)
                 }
