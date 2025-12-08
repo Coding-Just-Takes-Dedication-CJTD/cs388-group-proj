@@ -23,5 +23,7 @@ data class LocalGame(
 
     // Flags to know where this game belongs
     var inVault: Boolean = false,
+    //TODO: if inVault == true, indexNumber is saved with this and then listBelong gets updated with "GameVault: indexNumber"
     var inWishlist: Boolean = false
+    //TODO: if inWishList == true, indexNumber is saved with this and then listBelong gets updated with "WishList: indexNumber"
 )
