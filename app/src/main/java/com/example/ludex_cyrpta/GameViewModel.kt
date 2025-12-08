@@ -50,6 +50,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope = viewModelScope
 
+    private val gameDao = AppDatabase.getDatabase(application).gameDao()
+    
+    //TODO: make this -> private lateinit var trendingGamesList: MutableList<String>
+
     // no list generation here because multiple fragments use GameViewModel
     init {
         _isLoading.value = false
@@ -111,10 +115,32 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun fetchGameDetails(gameName: String, endpoint: String = "games") {
+    // UPDATED: Offline-First Fetch Logic
+    // We added 'gameID' as an optional parameter to check the local DB first
+    fun fetchGameDetails(gameName: String, gameID: Int? = null) {
         scope.launch {
             _isLoading.postValue(true)
-            _gameObj.postValue(null) //to clear the previous object
+            _gameObj.postValue(null) // Clear previous data
+            _errMsg.postValue(null)
+
+            // 1. CHECK LOCAL STORAGE (ROOM) FIRST
+            // If we have an ID, we check our backpack (Room DB)
+            if (gameID != null) {
+                val localGame = gameDao.getGameById(gameID)
+
+                if (localGame != null) {
+                    Log.i(TAG, "Found game in local storage! Loading instantly.")
+                    // Convert the local data back to a Game object and show it
+                    _gameObj.postValue(localGame.toGame())
+
+                    // Stop loading and EXIT. We don't need the internet.
+                    _isLoading.postValue(false)
+                    return@launch
+                }
+            }
+
+            // 2. NOT FOUND LOCALLY? FETCH FROM INTERNET (IGDB API)
+            Log.i(TAG, "Game not in local storage. Fetching from IGDB API...")
 
             val accessToken: String
             try {
@@ -130,7 +156,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             val injectable = gameName.replace("\"", "\\\"")
             val query = "fields id, name, total_rating, cover.image_id, genres.name, themes.name, game_modes.name, platforms.abbreviation, external_games.external_game_source.name, first_release_date, videos.video_id, summary, storyline, websites.url; where name = \"$injectable\";"
             try {
-                val respBody = makeRequest(accessToken, endpoint, query)
+                val respBody = makeRequest(accessToken, "games", query)
                 val gameDetail = parseDetailedResponse(respBody)
 
                 if (gameDetail == null) {
@@ -138,16 +164,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 } else {
                     _gameObj.postValue(gameDetail)
                 }
-
                 Log.i(TAG, "Fetch Successful for $gameName")
             } catch (e: Exception) {
                 Log.e(TAG, "Details fetch failed: ${e.message}", e)
-
-                val errorMsg = if (e is GameNotFoundException) {
-                    e.message
-                } else {
-                    "Details Data Fetch Failed: ${e.message}"
-                }
+                val errorMsg = if (e is GameNotFoundException) e.message else "Details Data Fetch Failed: ${e.message}"
                 _errMsg.postValue(errorMsg)
                 _gameObj.postValue(null) //clear data if error occurs
             } finally {
@@ -178,6 +198,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 val respBody = makeRequest(accessToken, endpoint, query)
                 val trendingGen = parseResponse(respBody)
                 _gameList.postValue(trendingGen)
+                
+                //TODO: save to trendingGamesList so trending check can happen
+                
 
                 Log.i(TAG, "Fetch of Trending Games was successful")
             } catch (e: Exception) {
@@ -245,17 +268,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     fun applyFilter(filter: String?)  {
         val currentQuery = _currQuery.value
-        _currFilter.value = filter // Update the filter state
+        _currFilter.value = filter //update the filter state
 
         if (!currentQuery.isNullOrBlank()) {
-            // If a search query is active, re-run the search with the new filter
+            //if a search query is active, re-run the search with the new filter
             searchGames(currentQuery, filter)
         } else if (!filter.isNullOrBlank()) {
-            // If no search query but a filter is applied, perform a search on an empty string to apply the filter
+            //if no search query but a filter is applied, perform a search on an empty string to apply the filter
             searchGames("", filter)
         }
         else {
-            // If filter is null/cleared and there's no query, reset to default paginated list
+            //if filter is null/cleared and there's no query, reset to default paginated list
             resetToDefault()
         }
     }
@@ -390,6 +413,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 } else {
                     ""
                 }
+                
+                //15. TODO: trending check
 
 
                 //get full Game instance to populate GameDetails page and to
@@ -490,5 +515,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+    }
+
+    private fun LocalGame.toGame(): Game {
+        return Game(
+            id = this.id,
+            name = this.name,
+            rating = this.rating,
+            imageLink = this.imageLink,
+            genreTag = this.genreTag,
+            themeTag = this.themeTag,
+            gameModeTag = this.gameModeTag,
+            platformTag = this.platformTag,
+            otherServicesTag = this.otherServicesTag,
+            releaseDate = this.releaseDate,
+            trailerLink = this.trailerLink,
+            descr = this.descr,
+            synopsis = this.synopsis,
+            listBelong = emptyMap(),
+            trending = false, //TODO: once trending implements are done, update to this.trending
+            website = this.website
+        )
     }
  }

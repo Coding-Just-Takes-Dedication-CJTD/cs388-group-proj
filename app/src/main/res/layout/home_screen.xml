@@ -19,15 +19,16 @@
 
     <TextView
         android:id="@+id/homePageHdr"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Hello {user}!"
-        android:textSize="50sp"
+        android:text="Hello, {user}!"
+        android:textSize="40sp"
         android:textStyle="bold|italic"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo_homepage"
         app:layout_constraintVertical_bias="0.032" />

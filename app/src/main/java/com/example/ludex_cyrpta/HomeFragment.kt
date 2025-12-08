@@ -5,16 +5,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+
+
 
 private const val TAG = "HomeFragment"
 
 class HomeFragment : Fragment() {
     private var greetingTextView: TextView? = null
+    private var snapshotListener: ListenerRegistration? = null
+
 
     //standard function to create the fragment
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,29 +35,65 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- Set greeting to user's email ---
-        val greetingTextView = view.findViewById<TextView>(R.id.homePageHdr)
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        greetingTextView.text = if (currentUser != null) {
-            val email = currentUser.email ?: "user"
-            val username = email.substringBefore("@") //show only username from email
-            "Hello $username!"
-        } else {
-            "Hello user!"
-        }
+        // Set greeting to user's email
+        greetingTextView = view.findViewById<TextView>(R.id.homePageHdr)
 
-        // Find the "boxes"
-        val act = activity as MainActivity
-        val bottomNav = act.findViewById<BottomNavigationView>(R.id.bottomNav)
+        // Now it's safe to call this
+        updateGreeting()
 
     }
+    
     override fun onResume() {
         super.onResume()
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val email = currentUser?.email ?: "user"
-        val username = email.substringBefore("@")
-        greetingTextView?.text = "Hello $username!"
+        // call the helper function so the name stays correct even if the app resumes
+        updateGreeting()
     }
+
+    // NEW: Update data when swapping tabs/screens
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            // "hidden = false" means the fragment is now VISIBLE
+            updateGreeting()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        snapshotListener?.remove() // Stop listening to save battery/data
+    }
+
+    // Helper function to fetch the name
+    private fun updateGreeting() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseFirestore.getInstance()
+
+        snapshotListener?.remove()
+
+        if (currentUser != null) {
+            snapshotListener = db.collection("users").document(currentUser.uid)
+                .addSnapshotListener { document, error ->
+                    if (error != null) {
+                        Log.e(TAG, "Listen failed.", error)
+                        return@addSnapshotListener
+                    }
+
+                    if (document != null && document.exists()) {
+                        // Name user used when they registered their account
+                        val savedName = document.getString("username")
+                        greetingTextView?.text = "Hello, $savedName!"
+                    } else {
+                        // Fallback to the first part of the user's email
+                        val email = currentUser.email ?: "User"
+                        val fallbackName = email.substringBefore("@")
+                        greetingTextView?.text = "Hello, $fallbackName!"
+                    }
+                }
+        } else {
+            greetingTextView?.text = "Hello user!"
+        }
+    }
+
 
     //necessary for initializing in MainActivity
     companion object {

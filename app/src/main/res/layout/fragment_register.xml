@@ -17,47 +17,64 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
+        android:id="@+id/regUsernameInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:textColor="#000000"
+        android:textColorHint="#808080"
+        app:layout_constraintTop_toBottomOf="@id/regTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <EditText
         android:id="@+id/regEmailInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/regTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/regTitle" />
 
     <EditText
         android:id="@+id/regPasswordInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:hint="Password"
         android:inputType="textPassword"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/regEmailInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/regEmailInput" />
 
     <EditText
         android:id="@+id/regConfirmPasswordInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/regPasswordInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/regPasswordInput" />
 
     <Button
         android:id="@+id/registerBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Register"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/regConfirmPasswordInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/regConfirmPasswordInput" />
 
     <TextView
         android:id="@+id/goToLogin"

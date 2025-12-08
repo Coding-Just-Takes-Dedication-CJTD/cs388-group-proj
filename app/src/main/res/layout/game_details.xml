@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,10 +21,9 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.099" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/gameRatingTV"
@@ -30,7 +35,7 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gameTitleTV"
         app:layout_constraintVertical_bias="0.0" />
@@ -185,28 +190,68 @@
     <TextView
         android:id="@+id/descriptionTV"
         android:layout_width="325dp"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:scrollbars="vertical"
-        android:textSize="15sp"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum cursus ornare nisi vel rhoncus. Quisque non volutpat odio, et cursus nunc. Integer pharetra posuere nulla at faucibus. Donec pulvinar velit eleifend lobortis commodo. Proin euismod dolor id magna consectetur viverra. Sed sollicitudin velit vitae nisi iaculis, varius dictum lacus rutrum. Ut consequat cursus nisl."
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionHdr"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.547" />
+
+    <Button
+        android:id="@+id/wishListAddBtn"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Add to Wishlist"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:backgroundTint="@android:color/white"
+        app:strokeColor="#FF000000"
+        app:strokeWidth="2dp"
+        app:cornerRadius="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTV" />
+
+    <Button
+        android:id="@+id/vaultListAddBtn"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Add to Vault"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:backgroundTint="@android:color/white"
+        app:strokeColor="#FF000000"
+        app:strokeWidth="2dp"
+        app:cornerRadius="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wishListAddBtn"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/gameBackBtn"
-        android:layout_width="132dp"
-        android:layout_height="50dp"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
         android:text="BACK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.057"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:backgroundTint="@android:color/white"
+        app:strokeColor="#FF000000"
+        app:strokeWidth="2dp"
+        app:cornerRadius="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/wishListAddBtn"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/errorPopUp"
@@ -241,33 +286,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <RadioGroup
-        android:id="@+id/listAdd_RG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV">
-
-        <RadioButton
-            android:id="@+id/AddToWL_rb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add to Wishlist"
-            android:textSize="18sp"
-            android:layout_marginRight="7dp"/>
-
-        <RadioButton
-            android:id="@+id/AddToGV_rb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add to Game Vault"
-            android:textSize="18sp"
-            android:layout_marginLeft="7dp"/>
-    </RadioGroup>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
