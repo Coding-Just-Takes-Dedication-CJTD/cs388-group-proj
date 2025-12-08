@@ -9,7 +9,6 @@
         android:id="@+id/searchBar"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        app:iconifiedByDefault="false"
         app:queryHint="Search for a game..."
         android:background="@drawable/search_view_bg"
         android:imeOptions="actionSearch"
