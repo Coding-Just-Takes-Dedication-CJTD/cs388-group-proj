@@ -255,7 +255,4 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         // 5. Show it! (ID = 777 is just a random number to identify this message)
         notificationManager.notify(777, notificationBuilder.build())
     }
-
-
-
 }

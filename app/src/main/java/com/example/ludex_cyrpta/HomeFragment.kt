@@ -38,11 +38,11 @@ class HomeFragment : Fragment() {
         // Set greeting to user's email
         greetingTextView = view.findViewById<TextView>(R.id.homePageHdr)
 
-
         // Now it's safe to call this
         updateGreeting()
 
     }
+    
     override fun onResume() {
         super.onResume()
         // call the helper function so the name stays correct even if the app resumes

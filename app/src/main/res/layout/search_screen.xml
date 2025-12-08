@@ -7,16 +7,34 @@
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchBar"
-        android:layout_width="360dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         app:iconifiedByDefault="false"
         app:queryHint="Search for a game..."
         android:background="@drawable/search_view_bg"
+        android:imeOptions="actionSearch"
+        app:iconifiedByDefault="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.063"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchPageHdr"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintVertical_bias="0.02"
+        app:queryHint="Search for a game..." />
+
+    <Button
+        android:id="@+id/filtersBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Filters"
+        android:textColor="@color/black"
+        app:backgroundTint="#CCCCCC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toEndOf="@id/searchBar"
+        app:layout_constraintTop_toBottomOf="@+id/searchPageHdr"
+        app:layout_constraintVertical_bias="0.018" />
 
     <TextView
         android:id="@+id/searchPageHdr"

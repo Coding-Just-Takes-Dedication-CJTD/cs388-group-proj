@@ -50,7 +50,6 @@ class GameVaultFragment : Fragment() {
     }
 
     //standard function to populate the fragment with the layout from the .xml file of the fragment
-    //things that happen in the "Game Vault" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }

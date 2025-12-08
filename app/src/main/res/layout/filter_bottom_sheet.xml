@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/filterHdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter Games"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/servicesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Other Services"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_bias="0.08"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filterHdr" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/servicesCG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="4dp"
+            app:selectionRequired="false"
+            app:singleSelection="true"
+            app:layout_constraintTop_toBottomOf="@id/servicesTitle">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/steamChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Steam"
+                android:tag="steam"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/epicChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Epic Games Store"
+                android:tag="epic"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/psChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Playstation Store US"
+                android:tag="ps"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/xboxChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XBOX Marketplace"
+                android:tag="xbox" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+
+        <!-- Action Buttons -->
+        <Button
+            android:id="@+id/applyFiltersBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Apply Filters"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toStartOf="@id/clearFiltersBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/servicesCG" />
+
+        <Button
+            android:id="@+id/clearFiltersBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear All"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/applyFiltersBtn"
+            app:layout_constraintBottom_toBottomOf="@id/applyFiltersBtn"/>
+
+        <!--IMPLEMENT THESE FILTERS AFTER THE SEMESTER
+        <TextView
+            android:id="@+id/genreTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Genres"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/filterHdr" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/genreChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="8dp"
+            app:selectionRequired="false"
+            app:singleSelection="false"
+            app:layout_constraintTop_toBottomOf="@id/genreTitle" />
+
+        <TextView
+            android:id="@+id/themeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Themes"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/genreChipGroup" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/themeChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="8dp"
+            app:selectionRequired="false"
+            app:singleSelection="false"
+            app:layout_constraintTop_toBottomOf="@id/themeTitle" />
+
+        <TextView
+            android:id="@+id/modeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Game Modes"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/themeChipGroup" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/modeChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="8dp"
+            app:selectionRequired="false"
+            app:singleSelection="false"
+            app:layout_constraintTop_toBottomOf="@id/modeTitle" />
+
+        <TextView
+            android:id="@+id/platformTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Platforms"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/modeChipGroup" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/platformChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="8dp"
+            app:selectionRequired="false"
+            app:singleSelection="false"
+            app:layout_constraintTop_toBottomOf="@id/platformTitle" />
+        -->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -38,6 +38,29 @@ data class Game(
             false,
             ""
         ) {}
+
+    /*
+    // list-specific constructor (un-comment depending on how John's lists work)
+    constructor(id: Int, name: String, imageLink: String, otherServicesTag: List<String>):
+            this(
+                id,
+                name,
+                0.0,
+                imageLink,
+                emptyList<String>(),
+                emptyList<String>(),
+                emptyList<String>(),
+                emptyList<String>(),
+                otherServicesTag,
+                "",
+                "",
+                "",
+                "",
+                emptyMap<String, Int>(),
+                false,
+                ""
+            ) {}
+     */
 }
 
 /* Game API Fields We Might Need (in parameter order):
@@ -58,21 +81,21 @@ data class Game(
         API endpoint "https://api.igdb.com/v4/genres" fields:
             name --> name of the genre; type: String
         <<TODO: "genres.name" returns both id & name so extract the "name" and put it into a List<name (String)>>>
-        <<TODO: filterQuery = "<searchesQuery>; where genres.name = "<filter>";">>
+        <<do this after semester: filterQuery = "<searchesQuery>; where genres.name = "<filter>";">>
             choose from: Adventure, Arcade, Card & Board Game, Fighting, Indie, MOBA, Music, Platform, Point-and-click, Puzzle, Quiz/Trivia, Racing, Real Time Strategy (RTS), Role-playing (RPG), Shooter, Simulator, Sport, Strategy, Turn-based strategy (TBS), Visual Novel
 
     ✅ -- themes -> game themes; type: array of Theme IDs
         API endpoint "https://api.igdb.com/v4/themes" fields:
             name --> name of the theme; type: Strings
        <<TODO: "themes.name" returns both id & name so extract the "name" and put it into a List<name (String)>>>
-       <<TODO: filterQuery = "<searchesQuery>; where themes.name = "<filter>";">>
+       <<do this after semester: TODO: filterQuery = "<searchesQuery>; where themes.name = "<filter>";">>
            choose from: Action, Business, Comedy, Drama, Educational, Fantasy, Historical, Horror, Mystery, Non-fiction, Open world, Romance, Sandbox, Science fiction, Stealth, Survival, Thriller
 
     ✅ -- game_modes -> modes of gameplay (singleplayer and multiplayer; needed for filter); type: array of Game Mode IDs (Int)
         API endpoint "https://api.igdb.com/v4/game_modes" fields:
             name --> name of the game mode
        <<TODO: "game_modes.name" returns both id & name so extract the "name" and put it into a List<name (String)>>>
-       <<TODO: filterQuery = "<searchesQuery>; where game_modes.name = "<filter>";">>
+       <<do this after semester: TODO: filterQuery = "<searchesQuery>; where game_modes.name = "<filter>";">>
            choose from: Battle Royale, Co-operative, Massively Multiplayer Online (MMO), Multiplayer, Single player, Split screen
 
     ✅ -- platforms -> platforms game was released on; type: array of Platform IDs
@@ -80,15 +103,16 @@ data class Game(
             abbreviation --> platform name abbreviation; type: String
        <<TODO: "platforms.abbreviation" returns both id & abbreviation so extract the "abbreviation" and put it into a List<abbrev (String)>>>
        <<TODO: either here or in adapter, do name case corrections, abbrev = "Browser" & optString(abbrev, "n/a")>>
-       <<TODO: filterQuery = "<searchesQuery>; where platforms.abbreviation = "<filter>";">>
+       <<do this after semester: TODO: filterQuery = "<searchesQuery>; where platforms.abbreviation = "<filter>";">>
             choose from: browser, Game Boy, Linux, Mac, PC, PS1, PS2, PS3, PS4, PSP, Wii, WiiU, X360, XBOX, XONE
 
     ✅ -- external_games -> external IDs this game has on other services (contingent on usefulness); type: array of External Game IDs (Int)
         API endpoint "https://api.igdb.com/v4/external_games" fields:
             external_game_source --> source of external game; type: reference ID for External Game Source (https://api.igdb.com/v4/external_game_sources)
+       <<TODO: THIS IS THE IMPORTANT FILTER TO USE>>
        <<TODO: "external_games.external_game_source.name" returns both id & name so extract the "name" and put it into a List<name (String)>>>
         <<TODO: filterQuery = "<searchesQuery>; where external_games.external_game_source.name = "<filter>";">>
-            choose from: Steam, Playstation Store US, Epic Games Store, Xbox Marketplace
+            choose from: Steam [1], Playstation Store US [36], Epic Games Store [26], Xbox Marketplace [31]
 
     ✅ -- first_release_date -> first release date of the game; type: Unix Time Stamp
 
@@ -98,7 +122,7 @@ data class Game(
         <<TODO: "videos.video_id" returns both id & image so grab only the first video_id and put into this template>>
         <<TODO: IGDB YouTube embed template -- https://www.youtube.com/embed/{video_id}>>
         <<TODO: IGDB YouTube thumbnail template -- https://img.youtube.com/vi/{video_id}/maxresdefault.jpg>>
-            to render this, do trailerLink.substrtingAfterLast("/") into the Glide or whatever
+            to render this, do trailerLink.substringAfterLast("/") into the Glide or whatever
 
     ✅ -- summary -> game description; type: String
 
@@ -106,8 +130,6 @@ data class Game(
 
     ✅ -- websites -> websites associated with the game; type: array of Website IDs (Int)
         API endpoint "https://api.igdb.com/v4/websites" fields:
-            trusted --> is the site trusted or not; type: boolean
             url --> URL of website; type: String
         <<TODO: "websites.url" returns both id & url so grab only the first url>>
-        <<TODO: DON'T FORGET TO ADD "where website.trusted = true;" to end of all queries that pull the website
  */

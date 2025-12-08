@@ -50,6 +50,7 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.profile_screen, container, false)
     }
 
+    //standard function to populate the fragment with the layout from the .xml file of the fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
