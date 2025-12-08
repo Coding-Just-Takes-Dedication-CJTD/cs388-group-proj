@@ -1,15 +1,11 @@
 package com.example.ludex_cyrpta
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -18,15 +14,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 
-private const val TAG = "MainActivity"
-
 class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     private var actvFrag: Fragment? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var bottomNav: BottomNavigationView
 
-    // Fragments
     private lateinit var loginFrag: LoginFragment
     private lateinit var registerFrag: RegisterFragment
     private lateinit var homeFrag: HomeFragment
@@ -39,78 +32,40 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
     private lateinit var gvFrag: GameVaultFragment
     private lateinit var wishFrag: WishlistFragment
 
-    // Handle user's answer to notification permission pop-up
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) Log.d(TAG, "Notification permission granted")
-        else Log.w(TAG, "Notification permission denied")
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = TextSizePreferences(newBase)
+        val config = newBase.resources.configuration
+        config.fontScale = prefs.getScale()
+        val newContext = newBase.createConfigurationContext(config)
+        super.attachBaseContext(newContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        loadTheme()
+        val themePrefs = ThemePreferences(this)
+        if (themePrefs.isDarkModeEnabled()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setupFirebase()
-        setupWindowInsets()
-        setupFragments()
-        setupBottomNav()
-
-        if (savedInstanceState == null) {
-            showInitialFragment()
-        } else {
-            restoreVisibleFragment()
-        }
-
-        listenForBackstackChanges()
-        askNotificationPermission()
-    }
-
-
-    // -------------------------------
-    // THEME
-    // -------------------------------
-    private fun loadTheme() {
-        val themePrefs = ThemePreferences(this)
-        val mode = if (themePrefs.isDarkModeEnabled())
-            AppCompatDelegate.MODE_NIGHT_YES
-        else
-            AppCompatDelegate.MODE_NIGHT_NO
-
-        AppCompatDelegate.setDefaultNightMode(mode)
-    }
-
-
-    // -------------------------------
-    // FIREBASE & NOTIFICATION SETUP
-    // -------------------------------
-    private fun setupFirebase() {
-        auth = FirebaseAuth.getInstance()
-
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM token failed", task.exception)
-                return@addOnCompleteListener
-            }
-            Log.d(TAG, "FCM Token: ${task.result}")
+            if (task.isSuccessful) Log.d("FCM", "Token: ${task.result}")
         }
-    }
 
-    private fun askNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        auth = FirebaseAuth.getInstance()
+        bottomNav = findViewById(R.id.bottomNav)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
+            insets
         }
-    }
 
+        val fragMngr: FragmentManager = supportFragmentManager
 
-    // -------------------------------
-    // FRAGMENTS
-    // -------------------------------
-    private fun setupFragments() {
         loginFrag = LoginFragment()
         registerFrag = RegisterFragment()
         homeFrag = HomeFragment()
@@ -122,79 +77,45 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         setFrag = SettingsFragment()
         gvFrag = GameVaultFragment()
         wishFrag = WishlistFragment()
-    }
 
-    private fun showInitialFragment() {
-        val fm = supportFragmentManager
-        val t = fm.beginTransaction()
+        if (savedInstanceState == null) {
+            val t = fragMngr.beginTransaction()
 
-        // Add all fragments once and hide them
-        t.add(R.id.mainScreen, loginFrag, "LOGIN").hide(loginFrag)
-            .add(R.id.mainScreen, registerFrag, "REGISTER").hide(registerFrag)
-            .add(R.id.mainScreen, wishFrag, "WISHLIST").hide(wishFrag)
-            .add(R.id.mainScreen, gvFrag, "GAME_VAULT").hide(gvFrag)
-            .add(R.id.mainScreen, setFrag, "SETTINGS").hide(setFrag)
-            .add(R.id.mainScreen, profFrag, "PROFILE").hide(profFrag)
-            .add(R.id.mainScreen, psFrag, "PROFILE_SETTINGS").hide(psFrag)
-            .add(R.id.mainScreen, trendingFrag, "TRENDS").hide(trendingFrag)
-            .add(R.id.mainScreen, searchFrag, "SEARCH").hide(searchFrag)
-            .add(R.id.mainScreen, vwFrag, "VAULT_WISH").hide(vwFrag)
-            .add(R.id.mainScreen, homeFrag, "HOME").hide(homeFrag)
+            t.add(R.id.mainScreen, registerFrag, "REGISTER").hide(registerFrag)
+            t.add(R.id.mainScreen, loginFrag, "LOGIN").hide(loginFrag)
+            t.add(R.id.mainScreen, wishFrag, "WISHLIST").hide(wishFrag)
+            t.add(R.id.mainScreen, gvFrag, "GAME_VAULT").hide(gvFrag)
+            t.add(R.id.mainScreen, setFrag, "SETTINGS").hide(setFrag)
+            t.add(R.id.mainScreen, profFrag, "PROFILE").hide(profFrag)
+            t.add(R.id.mainScreen, psFrag, "PROFILE_SETTINGS").hide(psFrag)
+            t.add(R.id.mainScreen, trendingFrag, "TRENDS").hide(trendingFrag)
+            t.add(R.id.mainScreen, searchFrag, "SEARCH").hide(searchFrag)
+            t.add(R.id.mainScreen, vwFrag, "VAULT_WISH").hide(vwFrag)
+            t.add(R.id.mainScreen, homeFrag, "HOME").hide(homeFrag)
+            t.commit()
 
-        t.commit()
-
-        // Decide initial fragment based on auth state
-        if (auth.currentUser == null) {
-            supportFragmentManager.beginTransaction().show(loginFrag).commit()
-            bottomNav.visibility = View.GONE
-            actvFrag = loginFrag
+            actvFrag = if (auth.currentUser == null) {
+                fragMngr.beginTransaction().show(loginFrag).commit()
+                bottomNav.visibility = View.GONE
+                loginFrag
+            } else {
+                fragMngr.beginTransaction().show(homeFrag).commit()
+                bottomNav.visibility = View.VISIBLE
+                homeFrag
+            }
         } else {
-            supportFragmentManager.beginTransaction().show(homeFrag).commit()
-            bottomNav.visibility = View.VISIBLE
-            actvFrag = homeFrag
+            actvFrag = fragMngr.fragments.lastOrNull { it.isVisible }
+            updateBottomNavVisibility(actvFrag)
         }
-    }
 
-    private fun restoreVisibleFragment() {
-        val fm = supportFragmentManager
-        actvFrag = fm.fragments.lastOrNull { it.isVisible }
-        bottomNav.visibility = if (isMainFragment(actvFrag)) View.VISIBLE else View.GONE
-    }
-
-    private fun listenForBackstackChanges() {
-        supportFragmentManager.addOnBackStackChangedListener {
-            val current = supportFragmentManager.fragments.lastOrNull { it.isVisible }
-            actvFrag = current
-            bottomNav.visibility = if (isMainFragment(current)) View.VISIBLE else View.GONE
+        fragMngr.addOnBackStackChangedListener {
+            val curr = fragMngr.fragments.lastOrNull { it.isVisible }
+            actvFrag = curr
+            updateBottomNavVisibility(curr)
         }
-    }
-
-    // Determines if fragment should show bottom nav
-    private fun isMainFragment(frag: Fragment?): Boolean {
-        return frag is HomeFragment ||
-                frag is SearchFragment ||
-                frag is TrendingFragment ||
-                frag is VaultWishlistFragment ||
-                frag is ProfileSettingsFragment
-    }
-
-    fun swapFrag(newFrag: Fragment) {
-        if (newFrag == actvFrag) return
-        val t = supportFragmentManager.beginTransaction()
-        actvFrag?.let { t.hide(it) }
-        t.show(newFrag).commit()
-        actvFrag = newFrag
-    }
-
-
-    // -------------------------------
-    // BOTTOM NAVIGATION
-    // -------------------------------
-    private fun setupBottomNav() {
-        bottomNav = findViewById(R.id.bottomNav)
 
         bottomNav.setOnItemSelectedListener { item ->
-            val newFrag = when (item.itemId) {
+            val newFrag: Fragment = when (item.itemId) {
                 R.id.homePage -> homeFrag
                 R.id.searchPage -> searchFrag
                 R.id.trendingPage -> trendingFrag
@@ -206,40 +127,44 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             true
         }
 
-        if (auth.currentUser != null) {
-            bottomNav.selectedItemId = R.id.homePage
-        }
+        if (auth.currentUser != null) bottomNav.selectedItemId = R.id.homePage
     }
 
-
-    // -------------------------------
-    // WINDOW INSETS
-    // -------------------------------
-    private fun setupWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(sys.left, sys.top, sys.right, sys.bottom)
-            insets
-        }
+    override fun onResume() {
+        super.onResume()
+        updateBottomNavVisibility(actvFrag)
     }
 
+    private fun updateBottomNavVisibility(frag: Fragment?) {
+        val shouldShow =
+            frag is HomeFragment ||
+                    frag is SearchFragment ||
+                    frag is TrendingFragment ||
+                    frag is VaultWishlistFragment ||
+                    frag is ProfileSettingsFragment ||
+                    frag is SettingsFragment
 
-    // -------------------------------
-    // GAME DETAILS (INTERFACE)
-    // -------------------------------
+        bottomNav.visibility = if (shouldShow) View.VISIBLE else View.GONE
+    }
+
+    fun swapFrag(newFrag: Fragment) {
+        if (newFrag == actvFrag) return
+        val t = supportFragmentManager.beginTransaction()
+        actvFrag?.let { t.hide(it) }
+        t.show(newFrag)
+        t.commit()
+        actvFrag = newFrag
+        updateBottomNavVisibility(newFrag)
+    }
+
     override fun onGameSelected(game: Game) {
-        Log.d(TAG, "Game Selected: ${game.name}")
-
         bottomNav.visibility = View.GONE
-
         val detailsFrag = GameDetailsFragment.newInstance(game.name)
         val t = supportFragmentManager.beginTransaction()
-
         actvFrag?.let { t.hide(it) }
-        t.add(R.id.mainScreen, detailsFrag, "GAME_DETAILS_${game.name.hashCode()}")
-            .addToBackStack(null)
-            .commit()
-
+        t.add(R.id.mainScreen, detailsFrag, "DETAILS_${game.name.hashCode()}")
+        t.addToBackStack(null)
+        t.commit()
         actvFrag = detailsFrag
     }
 }

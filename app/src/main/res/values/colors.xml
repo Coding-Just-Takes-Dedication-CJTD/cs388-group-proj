@@ -14,4 +14,7 @@
 
     <color name="text_secondary_light">#666666</color>
     <color name="text_secondary_dark">#CCCCCC</color>
+
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_700">#3700B3</color>
 </resources>
