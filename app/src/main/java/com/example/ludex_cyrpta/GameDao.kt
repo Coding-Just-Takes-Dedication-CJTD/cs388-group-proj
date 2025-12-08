@@ -19,4 +19,7 @@ interface GameDao {
     // Get all Wishlist games (Wishlist Page)
     @Query("SELECT * FROM saved_games WHERE inWishlist = 1")
     suspend fun getWishlistGames(): List<LocalGame>
+
+    @Query("DELETE FROM saved_games")
+    suspend fun deleteAllGames()
 }
