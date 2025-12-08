@@ -6,24 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".TrendingFragment" >
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:background="@drawable/search_view_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendPageHdr"
-        app:layout_constraintVertical_bias="0.016" />
-
     <TextView
         android:id="@+id/trendPageHdr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Trending"
-        android:textSize="50sp"
+        android:text="Top 20 Trending Games"
+        android:textSize="40sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,20 +21,49 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.036" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trendList"
+        android:layout_width="match_parent"
+        android:layout_height="570dp"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trendPageHdr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/trending_game_rv_item"/>
+
     <TextView
-        android:id="@+id/trendingContentPlacehldr"
-        android:layout_width="370dp"
-        android:layout_height="500dp"
-        android:background="@drawable/placeholder_bg"
-        android:gravity="center_horizontal|top"
-        android:text="Trending Content (placeholder)"
-        android:textSize="20dp"
+        android:id="@+id/errorPopUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layoutManager="LinearLayoutManager"
+        android:text="This is an example of an error!!"
+        android:textColor="#FF0000"
+        android:textSize="40sp"
+        android:textAllCaps="true"
         android:textStyle="bold"
+        android:background="#FFFF00"
+        android:gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.609"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        app:layout_constraintVertical_bias="0.283" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"/>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:theme="@style/Widget.AppCompat.ProgressBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

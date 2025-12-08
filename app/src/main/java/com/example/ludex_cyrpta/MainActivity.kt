@@ -210,6 +210,4 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             }
         }
     }
-
-
 }

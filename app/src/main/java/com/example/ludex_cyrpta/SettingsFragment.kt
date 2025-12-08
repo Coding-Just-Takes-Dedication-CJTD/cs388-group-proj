@@ -19,7 +19,6 @@ class SettingsFragment : Fragment() {
     }
 
     //standard function to populate the fragment with the layout from the .xml file of the fragment
-    //things that happen in the "Settings" page (like listeners) are called here
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
