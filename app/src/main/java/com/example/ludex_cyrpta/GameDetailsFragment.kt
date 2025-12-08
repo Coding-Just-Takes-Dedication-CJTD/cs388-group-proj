@@ -69,24 +69,15 @@ class GameDetailsFragment : Fragment() {
         description = view.findViewById(R.id.descriptionTV)
         backButton = view.findViewById(R.id.gameBackBtn)
         progBar = view.findViewById(R.id.progressBar)
-
-
-
-
-
-
-
+        
         vaultListAddBtn = view.findViewById(R.id.vaultListAddBtn)
         wishListAddBtn = view.findViewById(R.id.wishListAddBtn)
-
 
         errorMsg = view.findViewById(R.id.errorPopUp)
 
         backButton.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
-
-
 
         //webView setup
         trailerVid.settings.javaScriptEnabled = true
@@ -104,7 +95,6 @@ class GameDetailsFragment : Fragment() {
                 errorMsg.visibility = View.VISIBLE
             }
         }
-
         return view
     }
 
@@ -178,7 +168,7 @@ class GameDetailsFragment : Fragment() {
                 errorMsg.visibility = View.GONE
                 progBar.visibility = View.GONE
 
-
+                //TODO: see if it can be replaced with listBelong settings
                 checkVaultStatus(game)
                 checkWishlistStatus(game)
             } else if (viewModel.isLoading.value == false) {
@@ -186,11 +176,7 @@ class GameDetailsFragment : Fragment() {
                 errorMsg.visibility = View.VISIBLE
                 progBar.visibility = View.GONE
             }
-
-
         })
-
-
 
         // Observe loading state
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
@@ -213,7 +199,7 @@ class GameDetailsFragment : Fragment() {
         })
     }
 
-    private fun checkVaultStatus(game: Game) {
+    private fun checkVaultStatus(game: Game) { //TODO: try to use listBelong here
         vaultRepo.isGameInVault(game.id) { exists ->
             if (exists) {
                 // STATE: Game is saved. Button should allow REMOVING it.
@@ -268,7 +254,8 @@ class GameDetailsFragment : Fragment() {
             }
         }
     }
-    private fun checkWishlistStatus(game: Game) {
+    
+    private fun checkWishlistStatus(game: Game) {  //TODO: try to use listBelong here
         wishRepo.isGameInWishlist(game.id) { exists ->
             if (exists) {
                 // STATE: In Wishlist -> Show "Remove" (Red)
