@@ -63,7 +63,7 @@ class TrendingFragment : Fragment() {
         trendRV.layoutManager = layoutMngr
 
         setupObservers()
-        viewModel.fetchTrendingGames("games")
+        viewModel.fetchTrendingGames()
     }
 
     private fun setupObservers() {

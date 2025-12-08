@@ -27,17 +27,21 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val _gameObj = MutableLiveData<Game?>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val _errMsg = MutableLiveData<String?>()
+    private val _currQuery = MutableLiveData<String?>()
+    private val _currFilter = MutableLiveData<String?>(null)
 
-    //frontend accessible versions of _gameList, _isLoading, and _errMsg
+    //frontend accessible versions of private MutableLiveData
     val gameList: LiveData<List<Game>> = _gameList
     val gameObj: LiveData<Game?> = _gameObj
     val isLoading: LiveData<Boolean> = _isLoading
     val errMsg: LiveData<String?> = _errMsg
+    val currQuery: LiveData<String?> = _currQuery
+    val currFilter: LiveData<String?> = _currFilter
 
     //make the RecView "infinite" by adding page buffers
     private var currPage = 0 //current page number
     private val pageBuffer = 100 //number of games per page
-    private var isLastPage = false //bool for if it reached the last page for "infinite" RecView
+    var isLastPage = false //bool for if it reached the last page for "infinite" RecView
 
     //initiate the network client stuff
     private val client = OkHttpClient()
@@ -46,6 +50,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scope = viewModelScope
 
+    // no list generation here because multiple fragments use GameViewModel
     init {
         _isLoading.value = false
         _errMsg.value = null
@@ -53,14 +58,20 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadMoreGames() {
         if (_isLoading.value == false && !isLastPage) {
-            currPage++
-            fetchGameListData("games")
+            //only load more games when no search query or filter is active
+            if (_currQuery.value.isNullOrBlank() && _currFilter.value.isNullOrBlank()){
+                currPage++
+                fetchGameListData("games")
+            }  else {
+                Log.w(TAG, "Cannot load more games while a search query or filter is active.")
+            }
         }
     }
 
+    //default Game List Generation (no filters or searches done)
     fun fetchGameListData(endpoint: String) = scope.launch {
-        _isLoading.value = true
-        _errMsg.value = null
+        _isLoading.postValue(true)
+        _errMsg.postValue(null)
 
         val offset = currPage * pageBuffer //calculate offset based on current page
 
@@ -70,8 +81,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             Log.i(TAG, "Token fetched successfully.")
         } catch (e: Exception) {
             Log.e(TAG, "Cannot fetch token. Error: ${e.message}", e)
-            _errMsg.value = "Auth Failed: ${e.message}"
-            _isLoading.value = false
+            _errMsg.postValue("Auth Failed: ${e.message}")
+            _isLoading.postValue(false)
             return@launch
         }
 
@@ -82,7 +93,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
             val currList = _gameList.value.orEmpty().toMutableList()
             currList.addAll(newGamesGen)
-            _gameList.value = currList
+            _gameList.postValue(currList)
 
             if (newGamesGen.size < pageBuffer) {
                 isLastPage = true
@@ -93,10 +104,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Fetch failed: ${e.message}", e)
-            _errMsg.value = "Data Fetch Failed: ${e.message}"
+            _errMsg.postValue("Data Fetch Failed: ${e.message}")
             if (currPage > 0) currPage--
         } finally {
-            _isLoading.value = false
+            _isLoading.postValue(false)
         }
     }
 
@@ -145,7 +156,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun fetchTrendingGames(endpoint: String) {
+    fun fetchTrendingGames(endpoint: String = "games") {
         scope.launch {
             _isLoading.postValue(true)
             _errMsg.postValue(null)
@@ -175,6 +186,77 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             } finally {
                 _isLoading.postValue(false)
             }
+        }
+    }
+
+    fun searchGames(query: String, filter: String?, endpoint: String = "games") {
+        scope.launch {
+            _isLoading.postValue(true)
+            _errMsg.postValue(null)
+
+            _currQuery.postValue(query)
+            _currFilter.postValue(filter)
+
+            val accessToken: String
+            try {
+                accessToken = authService.tokenCheck()
+            } catch (e: Exception) {
+                // If token fails, show error and stop loading
+                _errMsg.postValue("Auth Failed: ${e.message}")
+                _isLoading.postValue(false)
+                return@launch
+            }
+
+            //original searchGames filter
+            val safeQuery = query.replace("\"", "\\\"")
+            var finalQuery = "fields id, name, total_rating, cover.image_id, first_release_date, storyline; search \"$safeQuery\";"
+
+            //apply filter if it exists
+            if (!filter.isNullOrBlank()) {
+                val storeCat = if (filter == "steam") {
+                    1
+                } else if (filter == "epic") {
+                    26
+                } else if (filter == "ps") {
+                    36
+                } else if (filter == "xbox") {
+                    31
+                } else {
+                    0
+                }
+                if (storeCat != 0) finalQuery += " where external_games.category = $storeCat;"
+            }
+
+            try {
+                val respBody = makeRequest(accessToken, endpoint, finalQuery)
+                val searchResults = parseResponse(respBody)
+
+                _gameList.postValue(searchResults)
+                isLastPage = true
+                Log.i(TAG, "Fetch successful!")
+            } catch (e: Exception) {
+                Log.e(TAG, "Fetch failed: ${e.message}", e)
+                _errMsg.postValue("Search Failed: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun applyFilter(filter: String?)  {
+        val currentQuery = _currQuery.value
+        _currFilter.value = filter // Update the filter state
+
+        if (!currentQuery.isNullOrBlank()) {
+            // If a search query is active, re-run the search with the new filter
+            searchGames(currentQuery, filter)
+        } else if (!filter.isNullOrBlank()) {
+            // If no search query but a filter is applied, perform a search on an empty string to apply the filter
+            searchGames("", filter)
+        }
+        else {
+            // If filter is null/cleared and there's no query, reset to default paginated list
+            resetToDefault()
         }
     }
 
@@ -370,6 +452,20 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 return ""
             }
         }
+    }
+
+    //resets the search page back to its default if the search query and filters are clear/empty
+    fun resetToDefault() {
+        //reset page counter and infinite scrolling
+        currPage = 0
+        isLastPage = false
+
+        //clear and reset the ViewModel states and then show the defaultList
+        _currQuery.postValue(null)
+        _currFilter.postValue(null)
+        _gameList.postValue(emptyList())
+        _gameList.postValue(emptyList())
+        fetchGameListData("games")
     }
 
     private suspend fun makeRequest(accessToken: String, endpoint: String, requestBodyText: String): String {
