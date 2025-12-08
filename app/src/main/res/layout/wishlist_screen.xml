@@ -14,6 +14,7 @@
         android:textSize="40dp"
         android:textStyle="bold"
         app:flow_verticalBias="0"
+        android:layout_marginTop="16dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
