@@ -126,7 +126,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             // 1. CHECK LOCAL STORAGE (ROOM) FIRST
             // If we have an ID, we check our backpack (Room DB)
             if (gameID != null) {
-                val localGame = gameDao.getGameById(gameId)
+                val localGame = gameDao.getGameById(gameID)
 
                 if (localGame != null) {
                     Log.i(TAG, "Found game in local storage! Loading instantly.")
