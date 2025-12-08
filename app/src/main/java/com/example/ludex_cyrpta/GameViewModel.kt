@@ -533,7 +533,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             descr = this.descr,
             synopsis = this.synopsis,
             listBelong = emptyMap(),
-            trending = this.trending,
+            trending = false, //TODO: once trending implements are done, update to this.trending
             website = this.website
         )
     }
