@@ -32,8 +32,9 @@ class ProfileFragment : Fragment() {
 
     // Define the ImageView so we can access it across functions
     private lateinit var profileImageView: ImageView
-
-    // 1. Image Picker Launcher
+    // Initialize the Repo (needed to access the clear function)
+    private val vaultRepo by lazy { VaultRepository(requireContext()) }
+    // Image Picker Launcher
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             safeToast("Processing image...")
@@ -54,7 +55,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- 1. Find All Views ---
+        // Find All Views
         val emailDisplay = view.findViewById<TextView>(R.id.currentUserEmail)
         val btnUser = view.findViewById<Button>(R.id.changeUsernameBtn)
         val btnEmail = view.findViewById<Button>(R.id.changeEmailBtn)
@@ -66,7 +67,7 @@ class ProfileFragment : Fragment() {
         profileImageView = view.findViewById(R.id.profileImageView)
         val imageCard = view.findViewById<View>(R.id.profilePicCard)
 
-        // --- 2. Setup Logic ---
+        //  Setup Logic
         emailDisplay.text = auth.currentUser?.email
 
         // Load existing image immediately
@@ -79,7 +80,7 @@ class ProfileFragment : Fragment() {
 
         logoutBtn.setOnClickListener { logout() }
 
-        // --- 3. Change Handlers ---
+        // Change Handlers
         btnUser.setOnClickListener {
             showSimpleDialog("Change Username", "Enter new username:") { newName ->
                 val uid = auth.currentUser?.uid
@@ -102,6 +103,12 @@ class ProfileFragment : Fragment() {
                                 safeToast("Email updated! Verification sent.")
                                 user.sendEmailVerification()
                                 emailDisplay.text = newEmail
+
+                                db.collection("users").document(user.uid)
+                                    .update("email", newEmail)
+                                    .addOnFailureListener { e ->
+                                        Log.e(TAG, "Failed to sync email to DB", e)
+                                    }
                             }
                             .addOnFailureListener { e ->
                                 safeToast("Error: ${e.message}")
@@ -130,9 +137,9 @@ class ProfileFragment : Fragment() {
 
         // NEW: Delete Account Listener
         btnDelete.setOnClickListener {
-            // 1. Security Check: Password required first
+            // Security Check: Password required first
             showReAuthDialog {
-                // 2. Confirmation Dialog: Are you sure?
+                // Confirmation Dialog: Are you sure?
                 showDeleteConfirmation()
             }
         }
@@ -143,7 +150,7 @@ class ProfileFragment : Fragment() {
 
 
 
-    // --- IMAGE HELPERS ---
+    // IMAGE HELPERS
 
     private fun encodeImage(imageUri: Uri): String? {
         try {
@@ -197,7 +204,7 @@ class ProfileFragment : Fragment() {
         return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.size)
     }
 
-    // --- UTILITY HELPERS ---
+    // Toast and Other Helper functions
 
     private fun safeToast(message: String) {
         if (isAdded && context != null) {
@@ -235,6 +242,8 @@ class ProfileFragment : Fragment() {
         builder.show()
     }
 
+
+    // Prove yourself before changing critical information
     private fun showReAuthDialog(onSuccess: () -> Unit) {
         val context = context ?: return
         val builder = AlertDialog.Builder(context)
@@ -263,15 +272,24 @@ class ProfileFragment : Fragment() {
     }
 
     private fun logout() {
+
+        view?.findViewById<Button>(R.id.logoutBtn)?.isEnabled = false
         FirebaseAuth.getInstance().signOut()
-        if (isAdded && context != null) {
-            val intent = android.content.Intent(requireContext(), MainActivity::class.java)
-            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+        vaultRepo.clearLocalData {
+
+            // 3. THEN Sign out from Firebase
+            FirebaseAuth.getInstance().signOut()
+
+            // 4. Restart the App
+            if (isAdded && context != null) {
+                val intent = android.content.Intent(requireContext(), MainActivity::class.java)
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
         }
     }
 
-    // "Are you sure?"
+    // "Are you sure?" Confirmation Dialog
     private fun showDeleteConfirmation() {
         val context = context ?: return
         AlertDialog.Builder(context)
@@ -285,31 +303,70 @@ class ProfileFragment : Fragment() {
     }
 
     //  Deletion Logic
+// --- UPDATED: Deletes Sub-collections, then User Data, then Auth ---
     private fun performAccountDeletion() {
         val user = auth.currentUser ?: return
         val uid = user.uid
 
-        // Delete User Data from Firestore
-        db.collection("users").document(uid).delete()
-            .addOnSuccessListener {
-                // Delete User from Authentication
-                user.delete()
+        safeToast("Deleting data...")
+
+        //  Delete 'vault' sub-collection
+        deleteCollection(db.collection("users").document(uid).collection("vault")) {
+
+            //  Delete 'wishlist' sub-collection
+            deleteCollection(db.collection("users").document(uid).collection("wishlist")) {
+
+                // Delete Main User Document (Username, Email, etc.)
+                db.collection("users").document(uid).delete()
                     .addOnSuccessListener {
-                        safeToast("Account successfully deleted.")
-                        //Go to Login
-                        if (isAdded && context != null) {
-                            val intent = android.content.Intent(requireContext(), MainActivity::class.java)
-                            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(intent)
+
+                        //  Wipe Local Room Database (Clean up phone)
+                        // Note: We create a temporary repo just to access the clear function
+                        val vaultRepo = VaultRepository(requireContext())
+                        vaultRepo.clearLocalData {
+
+                            // Delete Authentication
+                            user.delete()
+                                .addOnSuccessListener {
+                                    safeToast("Account deleted.")
+                                    if (isAdded && context != null) {
+                                        val intent = android.content.Intent(requireContext(), MainActivity::class.java)
+                                        intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        startActivity(intent)
+                                    }
+                                }
+                                .addOnFailureListener { e ->
+                                    safeToast("Failed to delete Auth: ${e.message}")
+                                    Log.e(TAG, "Failed to delete Auth", e)
+                                }
                         }
                     }
                     .addOnFailureListener { e ->
-                        safeToast("Failed to delete account: ${e.message}")
+                        safeToast("Failed to delete user data: ${e.message}")
                     }
             }
-            .addOnFailureListener { e ->
-                safeToast("Failed to delete data: ${e.message}")
+        }
+    }
+
+    // Deletes all documents in a specific collection
+    private fun deleteCollection(collection: com.google.firebase.firestore.CollectionReference, onComplete: () -> Unit) {
+        collection.get().addOnSuccessListener { snapshot ->
+            // "Batch" to delete multiple things at once
+            val batch = db.batch()
+            for (document in snapshot.documents) {
+                batch.delete(document.reference)
             }
+
+            // Commit the batch
+            batch.commit()
+                .addOnSuccessListener { onComplete() }
+                .addOnFailureListener {
+                    Log.e(TAG, "Failed to delete collection", it)
+                    onComplete()
+                }
+        }.addOnFailureListener {
+            onComplete() // Proceed even if collection read fails
+        }
     }
 
     companion object {

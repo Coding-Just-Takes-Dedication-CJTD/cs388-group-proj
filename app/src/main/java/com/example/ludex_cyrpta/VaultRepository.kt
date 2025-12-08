@@ -53,7 +53,15 @@ class VaultRepository(context: Context) {
             "rating" to game.rating,
             "releaseDate" to game.releaseDate,
             "synopsis" to game.synopsis,
-            "added_at" to FieldValue.serverTimestamp() // Timestamp to sort by "newest added"
+            "description" to game.descr,
+            "trailerLink" to game.trailerLink,
+            "website" to game.website,
+            "added_at" to FieldValue.serverTimestamp(),
+            "genres" to game.genreTag,
+            "themes" to game.themeTag,
+            "modes" to game.gameModeTag,
+            "platforms" to game.platformTag,
+            "services" to game.otherServicesTag
         )
 
         vaultRef.set(gameData)
@@ -124,13 +132,32 @@ class VaultRepository(context: Context) {
                 val gameList = mutableListOf<Game>()
                 for (document in result) {
                     try {
+                        // Cast Firestore Arrays back to Kotlin Lists safely
+                        // If the field exists, use it. If not, use empty list
+                        val genres = (document.get("genres") as? List<String>) ?: emptyList()
+                        val themes = (document.get("themes") as? List<String>) ?: emptyList()
+                        val modes = (document.get("modes") as? List<String>) ?: emptyList()
+                        val platforms = (document.get("platforms") as? List<String>) ?: emptyList()
+                        val services = (document.get("services") as? List<String>) ?: emptyList()
                         val game = Game(
                             id = document.getLong("id")?.toInt() ?: 0,
                             name = document.getString("name") ?: "Unknown",
                             rating = document.getDouble("rating") ?: 0.0,
                             imageLink = document.getString("imageLink") ?: "",
                             releaseDate = document.getString("releaseDate") ?: "n/a",
-                            synopsis = document.getString("synopsis") ?: ""
+                            synopsis = document.getString("synopsis") ?: "",
+                            descr = document.getString("description") ?: "",
+                            trailerLink = document.getString("trailerLink") ?: "",
+                            website = document.getString("website") ?: "",
+
+                            // Use variables extracted above
+                            genreTag = genres,
+                            themeTag = themes,
+                            gameModeTag = modes,
+                            platformTag = platforms,
+                            otherServicesTag = services,
+                            listBelong = emptyMap(),
+                            trending = false
                         )
                         gameList.add(game)
                         // Optional: Save to local DB here for next time
@@ -188,6 +215,22 @@ class VaultRepository(context: Context) {
                 Log.e(TAG, "Error removing game", e)
                 onFailure(e.message ?: "Unknown error")
             }
+    }
+
+    fun clearLocalData(onComplete: () -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                gameDao.deleteAllGames()
+                Log.d(TAG, "Local database wiped successfully.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to wipe local DB", e)
+            } finally {
+                // Switch to Main thread to let the UI know we are done
+                withContext(Dispatchers.Main) {
+                    onComplete()
+                }
+            }
+        }
     }
 
     private fun Game.toLocalGame(): LocalGame {
