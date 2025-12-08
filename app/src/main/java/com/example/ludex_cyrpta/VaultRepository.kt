@@ -161,6 +161,14 @@ class VaultRepository(context: Context) {
                         )
                         gameList.add(game)
                         // Optional: Save to local DB here for next time
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                // We mark it as 'inVault = true' so the local DB knows it belongs here
+                                gameDao.insertGame(game.toLocalGame().apply { inVault = true })
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Failed to cache game: ${game.name}", e)
+                            }
+                        }
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing game: ${e.message}")
                     }
