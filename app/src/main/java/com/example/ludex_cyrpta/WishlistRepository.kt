@@ -167,9 +167,10 @@ class WishlistRepository(context: Context) {
                         // --- SYNC: Save to Local DB ---
                         CoroutineScope(Dispatchers.IO).launch {
                             try {
+                                // We mark it as 'inWishlist = true' so the local DB knows it belongs here
                                 gameDao.insertGame(game.toLocalGame().apply { inWishlist = true })
                             } catch (e: Exception) {
-                                Log.e(TAG, "Failed to cache game", e)
+                                Log.e(TAG, "Failed to cache game: ${game.name}", e)
                             }
                         }
                     } catch (e: Exception) {
