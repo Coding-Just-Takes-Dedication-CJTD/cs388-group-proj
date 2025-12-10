@@ -1,6 +1,8 @@
 package com.example.ludex_cyrpta
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -120,6 +121,25 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         }
 
         if (auth.currentUser != null) bottomNav.selectedItemId = R.id.homePage
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleSteamRedirect(intent)
+    }
+
+    private fun handleSteamRedirect(intent: Intent) {
+        val data: Uri = intent.data ?: return
+        if (data.scheme != "ludex" || data.host != "steam-auth") return
+
+        val claimedId = data.getQueryParameter("openid.claimed_id") ?: return
+        val steamId = claimedId.substringAfterLast("/")
+
+        Log.d("STEAM_LOGIN", "SteamID = $steamId")
+
+        if (actvFrag is ProfileSettingsFragment) {
+            (actvFrag as ProfileSettingsFragment).onSteamLinked(steamId)
+        }
     }
 
     fun swapFrag(newFrag: Fragment) {
