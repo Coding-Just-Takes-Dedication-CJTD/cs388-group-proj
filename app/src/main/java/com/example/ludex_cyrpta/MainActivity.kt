@@ -66,10 +66,11 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         askNotificationPermission()
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
-        if (it.isSuccessful) Log.d("FCM", "Token: ${it.result}")
-        else {
-            Log.e(TAG, "Fetching FCM registration token failed", it.exception)
-            return@addOnCompleteListener
+            if (it.isSuccessful) Log.d("FCM", "Token: ${it.result}")
+            else {
+                Log.e(TAG, "Fetching FCM registration token failed", it.exception)
+                return@addOnCompleteListener
+            }
         }
 
         auth = FirebaseAuth.getInstance()

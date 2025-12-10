@@ -29,11 +29,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="12dp">
+
             <!-- Notifications -->
             <LinearLayout
                 android:id="@+id/setting_notifications"
@@ -42,6 +44,7 @@
                 android:orientation="horizontal"
                 android:padding="16dp"
                 android:background="?attr/colorSurface">
+
                 <TextView
                     android:id="@+id/text_notifications"
                     android:layout_width="0dp"
@@ -49,32 +52,9 @@
                     android:layout_weight="1"
                     android:text="Enable Notifications"
                     android:textSize="18sp"/>
+
                 <Switch
                     android:id="@+id/switch_notifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorOutline"/>
-            <!-- Dark Mode -->
-            <LinearLayout
-                android:id="@+id/setting_darkmode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:background="?attr/colorSurface">
-                <TextView
-                    android:id="@+id/text_darkmode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Dark Mode"
-                    android:textSize="18sp"/>
-                <Switch
-                    android:id="@+id/switch_darkmode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -83,6 +63,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?attr/colorOutline"/>
+
+            <!-- Dark Mode -->
+            <LinearLayout
+                android:id="@+id/setting_darkmode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="?attr/colorSurface">
+
+                <TextView
+                    android:id="@+id/text_darkmode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dark Mode"
+                    android:textSize="18sp"/>
+
+                <Switch
+                    android:id="@+id/switch_darkmode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/colorOutline"/>
+
             <!-- Email Updates -->
             <LinearLayout
                 android:id="@+id/setting_email_updates"
@@ -91,6 +101,7 @@
                 android:orientation="horizontal"
                 android:padding="16dp"
                 android:background="?attr/colorSurface">
+
                 <TextView
                     android:id="@+id/text_email_updates"
                     android:layout_width="0dp"
@@ -98,15 +109,18 @@
                     android:layout_weight="1"
                     android:text="Email Updates"
                     android:textSize="18sp"/>
+
                 <Switch
                     android:id="@+id/switch_email_updates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?attr/colorOutline"/>
+
             <!-- Text Size -->
             <LinearLayout
                 android:id="@+id/setting_text_size"
@@ -115,6 +129,7 @@
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:background="?attr/colorSurface">
+
                 <TextView
                     android:id="@+id/text_textsize_label"
                     android:layout_width="wrap_content"
@@ -122,24 +137,28 @@
                     android:text="Text Size"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
                     android:paddingTop="10dp">
+
                     <Button
                         android:id="@+id/btn_text_small"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Small"/>
+
                     <Button
                         android:id="@+id/btn_text_medium"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Medium"/>
+
                     <Button
                         android:id="@+id/btn_text_large"
                         android:layout_width="0dp"
@@ -148,10 +167,12 @@
                         android:text="Large"/>
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?attr/colorOutline"/>
+
             <!-- Steam Link -->
             <LinearLayout
                 android:id="@+id/setting_steam"
@@ -160,6 +181,7 @@
                 android:orientation="horizontal"
                 android:padding="16dp"
                 android:background="?attr/colorSurface">
+
                 <TextView
                     android:id="@+id/steamStatusText"
                     android:layout_width="0dp"
@@ -167,12 +189,14 @@
                     android:layout_weight="1"
                     android:text="Steam: Not Linked"
                     android:textSize="18sp"/>
+
                 <Button
                     android:id="@+id/steamLinkBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Link"/>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
