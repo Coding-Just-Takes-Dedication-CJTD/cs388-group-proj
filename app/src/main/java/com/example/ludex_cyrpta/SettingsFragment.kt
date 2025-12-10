@@ -1,5 +1,7 @@
 package com.example.ludex_cyrpta
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import androidx.core.content.ContextCompat
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 
 class SettingsFragment : Fragment() {
@@ -34,6 +37,9 @@ class SettingsFragment : Fragment() {
         val btnSmall = view.findViewById<Button>(R.id.btn_text_small)
         val btnMedium = view.findViewById<Button>(R.id.btn_text_medium)
         val btnLarge = view.findViewById<Button>(R.id.btn_text_large)
+
+        val steamBtn = view.findViewById<Button>(R.id.steamLinkBtn)
+        val steamStatus = view.findViewById<TextView>(R.id.steamStatusText)
 
         updateTextSizeButtons(btnSmall, btnMedium, btnLarge)
 
@@ -70,6 +76,10 @@ class SettingsFragment : Fragment() {
             updateTextSizeButtons(btnSmall, btnMedium, btnLarge)
             requireActivity().recreate()
         }
+
+        steamBtn.setOnClickListener {
+            openSteamLogin()
+        }
     }
 
     private fun updateTextSizeButtons(small: Button, medium: Button, large: Button) {
@@ -80,6 +90,24 @@ class SettingsFragment : Fragment() {
         small.setBackgroundColor(if (selected == TextSizePreferences.SIZE_SMALL) active else inactive)
         medium.setBackgroundColor(if (selected == TextSizePreferences.SIZE_MEDIUM) active else inactive)
         large.setBackgroundColor(if (selected == TextSizePreferences.SIZE_LARGE) active else inactive)
+    }
+
+    private fun openSteamLogin() {
+        val steamUrl =
+            "https://steamcommunity.com/openid/login" +
+                    "?openid.ns=http://specs.openid.net/auth/2.0" +
+                    "&openid.mode=checkid_setup" +
+                    "&openid.return_to=ludex://steam-auth" +
+                    "&openid.realm=ludex://steam-auth" +
+                    "&openid.identity=http://specs.openid.net/auth/2.0/identifier_select" +
+                    "&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(steamUrl))
+        requireContext().startActivity(intent)
+    }
+
+    fun onSteamLinked(steamId: String) {
+        view?.findViewById<TextView>(R.id.steamStatusText)?.text = "Steam ID: $steamId"
     }
 
     companion object {

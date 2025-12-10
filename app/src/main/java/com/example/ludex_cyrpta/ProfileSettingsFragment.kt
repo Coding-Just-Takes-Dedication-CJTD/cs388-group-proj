@@ -1,6 +1,7 @@
 package com.example.ludex_cyrpta
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,11 @@ class ProfileSettingsFragment : Fragment() {
                 else -> null
             }
         }.attach()
+    }
+
+    fun onSteamLinked(steamId: String) {
+        Log.d("STEAM_LINK", "Steam ID received in fragment: $steamId")
+        // Add UI update or saving logic here
     }
 
     //necessary for initializing in MainActivity
