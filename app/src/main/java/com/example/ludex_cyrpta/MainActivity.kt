@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
     private lateinit var wishFrag: WishlistFragment
 
 
-    // --- NEW: This handles the USER'S CHOICE when the permission pop-up appears ---
+    override fun attachBaseContext(newBase: Context) {
         val textPrefs = TextSizePreferences(newBase)
         val config = newBase.resources.configuration
         config.fontScale = textPrefs.getScale()
@@ -65,14 +65,15 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
         askNotificationPermission()
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+        if (it.isSuccessful) Log.d("FCM", "Token: ${it.result}")
+        else {
+            Log.e(TAG, "Fetching FCM registration token failed", it.exception)
             return@addOnCompleteListener
         }
 
         auth = FirebaseAuth.getInstance()
 
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         if (auth.currentUser != null) {
             sendLoginNotification()
         }
