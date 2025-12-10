@@ -2,289 +2,245 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     android:fillViewport="true">
-    
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/gameTitleTV"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Title"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:paddingBottom="24dp">
 
-    <TextView
-        android:id="@+id/gameRatingTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Rating:"
-        android:textSize="20sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameTitleTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/gameTitleTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Title"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/gameReleaseDateTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Release Date:"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameRatingTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/gameRatingTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Rating:"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/gameTitleTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/genresListTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Genres:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameReleaseDateTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/gameReleaseDateTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Release Date:"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/gameRatingTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/themeListTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Themes:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genresListTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/genresListTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Genres:"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/gameReleaseDateTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/gameModesTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Game Mode(s):"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/themeListTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/themeListTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Themes:"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/genresListTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/platformListTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Platform(s):"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameModesTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/gameModesTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Game Mode(s):"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/themeListTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/otherServicesTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Also Available at:"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/platformListTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/platformListTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Platform(s):"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/gameModesTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/gameLinkTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:gravity="center"
-        android:linksClickable="true"
-        android:text="https://"
-        android:textColorLink="#2196F3"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/otherServicesTV"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/otherServicesTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Also Available At:"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/platformListTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/trendingView"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:background="#2DA032"
-        android:gravity="center"
-        android:text="TRENDING"
-        android:textColor="#FFFFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameLinkTV"
-        app:layout_constraintVertical_bias="0.024" />
+        <TextView
+            android:id="@+id/gameLinkTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="https://"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/otherServicesTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <WebView
-        android:id="@+id/trailerView"
-        android:layout_width="325dp"
-        android:layout_height="185dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trendingView"
-        app:layout_constraintVertical_bias="0.057" />
+        <TextView
+            android:id="@+id/trendingView"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="TRENDING"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="6dp"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:background="?attr/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/gameLinkTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/descriptionHdr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Description"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trailerView"
-        app:layout_constraintVertical_bias="0.07" />
+        <WebView
+            android:id="@+id/trailerView"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            app:layout_constraintTop_toBottomOf="@id/trendingView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/descriptionTV"
-        android:layout_width="325dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:scrollbars="vertical"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum cursus ornare nisi vel rhoncus. Quisque non volutpat odio, et cursus nunc. Integer pharetra posuere nulla at faucibus. Donec pulvinar velit eleifend lobortis commodo. Proin euismod dolor id magna consectetur viverra. Sed sollicitudin velit vitae nisi iaculis, varius dictum lacus rutrum. Ut consequat cursus nisl."
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionHdr"
-        app:layout_constraintVertical_bias="0.547" />
+        <TextView
+            android:id="@+id/descriptionHdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="20sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/trailerView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/wishListAddBtn"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:text="Add to Wishlist"
-        android:textStyle="bold"
-        android:textColor="#FF000000"
-        android:backgroundTint="@android:color/white"
-        app:strokeColor="#FF000000"
-        app:strokeWidth="2dp"
-        app:cornerRadius="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTV" />
+        <TextView
+            android:id="@+id/descriptionTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/descriptionHdr"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/vaultListAddBtn"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:text="Add to Vault"
-        android:textStyle="bold"
-        android:textColor="#FF000000"
-        android:backgroundTint="@android:color/white"
-        app:strokeColor="#FF000000"
-        app:strokeWidth="2dp"
-        app:cornerRadius="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wishListAddBtn"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wishListAddBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Add to Wishlist"
+            app:layout_constraintTop_toBottomOf="@id/descriptionTV"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="20dp"
+            app:backgroundTint="?attr/colorSurface"
+            app:strokeColor="?android:attr/textColorPrimary"
+            app:strokeWidth="2dp"
+            android:textColor="?android:attr/textColorPrimary"/>
 
-    <Button
-        android:id="@+id/gameBackBtn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="BACK"
-        android:textStyle="bold"
-        android:textColor="#FF000000"
-        android:backgroundTint="@android:color/white"
-        app:strokeColor="#FF000000"
-        app:strokeWidth="2dp"
-        app:cornerRadius="16dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/wishListAddBtn"
-        app:layout_constraintVertical_bias="1.0" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/vaultListAddBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Add to Vault"
+            app:layout_constraintTop_toBottomOf="@id/wishListAddBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
+            app:backgroundTint="?attr/colorSurface"
+            app:strokeColor="?android:attr/textColorPrimary"
+            app:strokeWidth="2dp"
+            android:textColor="?android:attr/textColorPrimary"/>
 
-    <TextView
-        android:id="@+id/errorPopUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
-        android:text="This is an example of an error!!"
-        android:textColor="#FFFF00"
-        android:textSize="40sp"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:background="#FF0000"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/gameBackBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="BACK"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="24dp"
+            app:backgroundTint="?attr/colorSurface"
+            app:strokeColor="?android:attr/textColorPrimary"
+            app:strokeWidth="2dp"
+            android:textColor="?android:attr/textColorPrimary"/>
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:theme="@style/Widget.AppCompat.ProgressBar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/errorPopUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Error!"
+            android:textSize="32sp"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:background="#CC0000"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
