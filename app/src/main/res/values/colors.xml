@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Light Mode Background & Surface -->
-    <color name="light_background">#F5F5F5</color>
-    <color name="light_surface">#FFFFFF</color>
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
 
     <!-- Light Text Colors -->
     <color name="nav_item_unselected">#888888</color>
@@ -16,7 +16,7 @@
     <color name="black">#000000</color>
 
     <!-- Required by layout files -->
-    <color name="text_primary_light">#000000</color>
-    <color name="text_secondary_light">#666666</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#666666</color>
 
 </resources>

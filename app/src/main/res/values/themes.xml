@@ -8,22 +8,22 @@
         <item name="colorOnPrimary">@android:color/white</item>
 
         <!-- Background colors -->
-        <item name="android:colorBackground">@color/light_background</item>
+        <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@android:color/black</item>
 
         <!-- Surface colors (used by RecyclerView items, cards, sheets) -->
-        <item name="colorSurface">@color/light_surface</item>
+        <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@android:color/black</item>
-        <item name="colorSurfaceVariant">@color/light_surface</item>
+        <item name="colorSurfaceVariant">@color/surface</item>
         <item name="colorOnSurfaceVariant">@color/nav_item_unselected</item>
 
         <!-- Error colors (used by errorPopUp) -->
         <item name="colorError">@android:color/holo_red_light</item>
         <item name="colorOnError">@android:color/white</item>
-        <item name="colorErrorContainer">@color/light_surface</item>
+        <item name="colorErrorContainer">@color/surface</item>
 
         <!-- Status bar color -->
-        <item name="android:statusBarColor">@color/light_surface</item>
+        <item name="android:statusBarColor">@color/surface</item>
 
 
 

@@ -2,12 +2,12 @@
 <resources>
 
     <!-- Dark Mode Background & Surface -->
-    <color name="dark_background">#121212</color>
-    <color name="dark_surface">#1E1E1E</color>
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
 
     <!-- Night text colors -->
-    <color name="text_primary_dark">#FFFFFF</color>
-    <color name="text_secondary_dark">#CCCCCC</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#CCCCCC</color>
 
     <!-- Brand Colors -->
     <color name="purple_200">#BB86FC</color>
