@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- Light Mode Background & Surface -->
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Light Text Colors -->
+    <color name="nav_item_unselected">#888888</color>
+
+    <!-- Brand Colors -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="black">#000000</color>
+
+    <!-- Required by layout files -->
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#666666</color>
+
 </resources>
