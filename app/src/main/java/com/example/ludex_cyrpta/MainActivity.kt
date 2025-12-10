@@ -16,6 +16,8 @@ import android.content.pm.PackageManager // <--- Needed to check permission stat
 import android.os.Build // <--- Needed to check Android version
 import androidx.activity.result.contract.ActivityResultContracts // <--- Needed for the new way to ask permissions
 import androidx.core.content.ContextCompat // <--- Helper for compatibility
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.messaging.FirebaseMessaging // <--- The Firebase class to get the token
 
 private const val TAG = "MainActivity"
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
     private var actvFrag: Fragment? = null
     private lateinit var auth: FirebaseAuth
+    private var snapshotListener: ListenerRegistration? = null
     private lateinit var bottomNav: BottomNavigationView
 
     // --- Fragments ---
@@ -78,10 +81,10 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             insets
         }
 
-        // --- NEW: Trigger Notification if User is Logged In ---
+       /* // --- NEW: Trigger Notification if User is Logged In ---
         if (auth.currentUser != null) {
             sendLoginNotification()
-        }
+        }*/
 
         val fragMngr: FragmentManager = supportFragmentManager
 
@@ -221,38 +224,85 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
     }
 
     // NEW: Function to send the "Welcome" notification
-    private fun sendLoginNotification() {
+    fun sendLoginNotification() {
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseFirestore.getInstance()
+
+
+        snapshotListener?.remove()
+
         //Check Permission (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
-                PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED
+            ) {
                 return // If we don't have permission, stop here.
             }
         }
 
         // 2. Define the ID and Channel
-        val channelId = "ludex_login_channel"
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val channelId = "ludex_login_channel_high"
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
 
         // 3. Create Channel (Required for Android 8+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = android.app.NotificationChannel(
                 channelId,
                 "Login Updates",
-                android.app.NotificationManager.IMPORTANCE_DEFAULT
+                android.app.NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(channel)
         }
 
-        // 4. Build the Notification
-        val notificationBuilder = androidx.core.app.NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
-            .setContentTitle("Welcome to Ludex Crypta!")
-            .setContentText("We hope you enjoy your experience.")
-            .setAutoCancel(true)
-            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_DEFAULT)
+        if (currentUser != null) {
+            snapshotListener = db.collection("users").document(currentUser.uid)
+                .addSnapshotListener { document, error ->
+                    if (error != null) {
+                        Log.e(TAG, "Listen failed.", error)
+                        return@addSnapshotListener
+                    }
+                    if (document != null && document.exists()) {
+                        // Name user used when they registered their account
+                        val savedName = document.getString("username")
+                        // 4. Build the Notification
+                        val notificationBuilder =
+                            androidx.core.app.NotificationCompat.Builder(this, channelId)
+                                .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
+                                .setContentTitle("Welcome to Ludex Crypta, ${savedName}!")
+                                .setContentText("We hope you enjoy your experience.")
+                                .setAutoCancel(true)
+                                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
 
-        // 5. Show it! (ID = 777 is just a random number to identify this message)
-        notificationManager.notify(777, notificationBuilder.build())
+                        // 5. Show it! (ID = 777 is just a random number to identify this message)
+                        notificationManager.notify(777, notificationBuilder.build())
+                    } else {
+                        // Fallback to the first part of the user's email
+                        val email = currentUser.email ?: "User"
+                        val fallbackName = email.substringBefore("@")
+                        val notificationBuilder =
+                            androidx.core.app.NotificationCompat.Builder(this, channelId)
+                                .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
+                                .setContentTitle("Welcome to Ludex Crypta, ${fallbackName}!")
+                                .setContentText("We hope you enjoy your experience.")
+                                .setAutoCancel(true)
+                                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+                    }
+
+                }
+        }
+        else {
+            val notificationBuilder =
+                androidx.core.app.NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
+                    .setContentTitle("Welcome to Ludex Crypta!")
+                    .setContentText("We hope you enjoy your experience.")
+                    .setAutoCancel(true)
+                    .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+
+            notificationManager.notify(777, notificationBuilder.build()) // 5. Show it! (ID = 777 is just a random number to identify this message)
+        }
+
     }
 }

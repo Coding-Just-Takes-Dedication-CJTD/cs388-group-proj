@@ -40,7 +40,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             auth.signInWithEmailAndPassword(e, p)
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Logged in!", Toast.LENGTH_SHORT).show()
-
+                    (activity as? MainActivity)?.sendLoginNotification()
                     val mainAct = requireActivity() as MainActivity
                     val fragMngr = mainAct.supportFragmentManager
 
