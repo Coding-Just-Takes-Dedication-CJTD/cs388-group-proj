@@ -7,15 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.messaging.FirebaseMessaging
 import android.Manifest // <--- Needed for permission constants
 import android.content.Context
 import android.content.pm.PackageManager // <--- Needed to check permission status
 import android.os.Build // <--- Needed to check Android version
 import androidx.activity.result.contract.ActivityResultContracts // <--- Needed for the new way to ask permissions
 import androidx.core.content.ContextCompat // <--- Helper for compatibility
+import com.google.firebase.messaging.FirebaseMessaging // <--- The Firebase class to get the token
 
 private const val TAG = "MainActivity"
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var bottomNav: BottomNavigationView
 
+    // --- Fragments ---
     private lateinit var loginFrag: LoginFragment
     private lateinit var registerFrag: RegisterFragment
     private lateinit var homeFrag: HomeFragment
@@ -38,14 +40,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
     private lateinit var wishFrag: WishlistFragment
 
 
-    override fun attachBaseContext(newBase: Context) {
-        val textPrefs = TextSizePreferences(newBase)
-        val config = newBase.resources.configuration
-        config.fontScale = textPrefs.getScale()
-        val newContext = newBase.createConfigurationContext(config)
-        super.attachBaseContext(newContext)
-    }
-
+    // --- NEW: This handles the USER'S CHOICE when the permission pop-up appears ---
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -62,39 +57,44 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
         askNotificationPermission()
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            if (it.isSuccessful) Log.d("FCM", "Token: ${it.result}")
-            else {
-                Log.e(TAG, "Fetching FCM registration token failed", it.exception)
+
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@addOnCompleteListener
             }
+            val token = task.result
+            Log.d(TAG, "FCM Token: $token") // <--- LOOK IN LOGCAT FOR THIS TAG TO COPY YOUR TOKEN
         }
+
 
         auth = FirebaseAuth.getInstance()
 
-        if (auth.currentUser != null) {
-            sendLoginNotification()
-        }
-
+        // Edge-to-edge padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // --- NEW: Trigger Notification if User is Logged In ---
         if (auth.currentUser != null) {
             sendLoginNotification()
         }
 
         val fragMngr: FragmentManager = supportFragmentManager
 
+
         loginFrag = LoginFragment()
         registerFrag = RegisterFragment()
+
         homeFrag = HomeFragment()
         vwFrag = VaultWishlistFragment()
         searchFrag = SearchFragment()
         trendingFrag = TrendingFragment()
         psFrag = ProfileSettingsFragment()
+
         profFrag = ProfileFragment()
         setFrag = SettingsFragment()
         gvFrag = GameVaultFragment()
@@ -102,24 +102,27 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
         bottomNav = findViewById(R.id.bottomNav)
 
+        // --- Add & hide all fragments (only once) ---
         if (savedInstanceState == null) {
-            val t = fragMngr.beginTransaction()
+            val fragTransaction = fragMngr.beginTransaction()
 
-            t.add(R.id.mainScreen, registerFrag, "REGISTER").hide(registerFrag)
-            t.add(R.id.mainScreen, loginFrag, "LOGIN").hide(loginFrag)
-            t.add(R.id.mainScreen, wishFrag, "WISHLIST").hide(wishFrag)
-            t.add(R.id.mainScreen, gvFrag, "GAME_VAULT").hide(gvFrag)
-            t.add(R.id.mainScreen, setFrag, "SETTINGS").hide(setFrag)
-            t.add(R.id.mainScreen, profFrag, "PROFILE").hide(profFrag)
-            t.add(R.id.mainScreen, psFrag, "PROFILE_SETTINGS").hide(psFrag)
-            t.add(R.id.mainScreen, trendingFrag, "TRENDS").hide(trendingFrag)
-            t.add(R.id.mainScreen, searchFrag, "SEARCH").hide(searchFrag)
-            t.add(R.id.mainScreen, vwFrag, "VAULT_WISH").hide(vwFrag)
-            t.add(R.id.mainScreen, homeFrag, "HOME").hide(homeFrag) // hide home initially
-            t.commit()
+            fragTransaction
+                .add(R.id.mainScreen, registerFrag, "REGISTER").hide(registerFrag)
+                .add(R.id.mainScreen, loginFrag, "LOGIN").hide(loginFrag)
+                .add(R.id.mainScreen, wishFrag, "WISHLIST").hide(wishFrag)
+                .add(R.id.mainScreen, gvFrag, "GAME_VAULT").hide(gvFrag)
+                .add(R.id.mainScreen, setFrag, "SETTINGS").hide(setFrag)
+                .add(R.id.mainScreen, profFrag, "PROFILE").hide(profFrag)
+                .add(R.id.mainScreen, psFrag, "PROFILE_SETTINGS").hide(psFrag)
+                .add(R.id.mainScreen, trendingFrag, "TRENDS").hide(trendingFrag)
+                .add(R.id.mainScreen, searchFrag, "SEARCH").hide(searchFrag)
+                .add(R.id.mainScreen, vwFrag, "VAULT_WISH").hide(vwFrag)
+                .add(R.id.mainScreen, homeFrag, "HOME").hide(homeFrag) // hide home initially
+                .commit()
 
             // Decide first fragment based on login state
-            actvFrag = if (auth.currentUser == null) {
+            val currentUser = auth.currentUser
+            actvFrag = if (currentUser == null) {
                 // Show login fragment
                 fragMngr.beginTransaction().show(loginFrag).commit()
                 bottomNav.visibility = View.GONE
@@ -132,15 +135,28 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             }
         } else { //else find currently visible fragment
             actvFrag = fragMngr.fragments.lastOrNull() { it.isVisible }
-            updateNavVisibility(actvFrag)
+
+            val isMainFrag = actvFrag is HomeFragment || actvFrag is SearchFragment ||
+                             actvFrag is TrendingFragment || actvFrag is VaultWishlistFragment ||
+                             actvFrag is ProfileSettingsFragment
+            bottomNav.visibility = if (isMainFrag) View.VISIBLE else View.GONE
         }
 
         //ensures clicking the back button does the correct navigation
         // (and that bottom Nav is only visible on main pages)
         fragMngr.addOnBackStackChangedListener {
-            val curr = fragMngr.fragments.lastOrNull { it.isVisible }
-            actvFrag = curr
-            updateNavVisibility(curr)
+            val currFrag = fragMngr.fragments.lastOrNull { it.isVisible }
+            actvFrag = currFrag
+
+            val isMainFrag = currFrag is HomeFragment || currFrag is SearchFragment ||
+                             currFrag is TrendingFragment || currFrag is VaultWishlistFragment ||
+                             currFrag is ProfileSettingsFragment
+
+            if (isMainFrag) {
+                bottomNav.visibility = View.VISIBLE
+            } else {
+                bottomNav.visibility = View.GONE
+            }
         }
 
         // --- Bottom Navigation ---
@@ -157,26 +173,36 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
             true
         }
 
+        // Set default bottom nav selection if user is logged in
         if (auth.currentUser != null) bottomNav.selectedItemId = R.id.homePage
     }
 
+    // --- Swap fragments cleanly ---
     fun swapFrag(newFrag: Fragment) {
         if (newFrag == actvFrag) return //to not swap with self
-        val t = supportFragmentManager.beginTransaction()
+
+        val fragTrnsctn = supportFragmentManager.beginTransaction()
         actvFrag?.let { fragTrnsctn.hide(it) }
-        t.show(newFrag)
-        t.commit()
+        fragTrnsctn.show(newFrag)
+        fragTrnsctn.commit()
         actvFrag = newFrag
-        updateNavVisibility(newFrag)
     }
 
     override fun onGameSelected(game: Game) {
+        Log.d(TAG, "Game: ${game.name} has been selected...\nGoing to details page...")
+
+        bottomNav.visibility = View.GONE
+
         val detailsFrag = GameDetailsFragment.newInstance(game.name, game.id)
-        val t = supportFragmentManager.beginTransaction()
+
+        val fragTransaction = supportFragmentManager.beginTransaction()
         actvFrag?.let { fragTransaction.hide(it) }
-        t.add(R.id.mainScreen, detailsFrag)
-        t.addToBackStack(null)
-        t.commit()
+
+        //unique id to differentiate fragments
+        fragTransaction.add(R.id.mainScreen, detailsFrag, "GAME_DETAILS_${game.id}")
+        fragTransaction.addToBackStack(null)
+        fragTransaction.commit()
+
         actvFrag = detailsFrag
     }
 
@@ -194,8 +220,9 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
         }
     }
 
+    // NEW: Function to send the "Welcome" notification
     private fun sendLoginNotification() {
-        //Check Permission
+        //Check Permission (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -227,13 +254,5 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener {
 
         // 5. Show it! (ID = 777 is just a random number to identify this message)
         notificationManager.notify(777, notificationBuilder.build())
-    }
-    private fun updateNavVisibility(f: Fragment?) {
-        val show = f is HomeFragment ||
-                f is SearchFragment ||
-                f is TrendingFragment ||
-                f is VaultWishlistFragment ||
-                f is ProfileSettingsFragment
-        bottomNav.visibility = if (show) View.VISIBLE else View.GONE
     }
 }

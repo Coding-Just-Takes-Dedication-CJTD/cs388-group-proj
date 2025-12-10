@@ -3,15 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:background="?attr/colorSurface">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:padding="16dp"
-        android:background="?attr/colorSurface">
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/filterHdr"
@@ -20,64 +17,66 @@
             android:text="Filter Games"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/servicesTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Other Services"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintTop_toBottomOf="@id/filterHdr"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintVertical_bias="0.08"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filterHdr" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/servicesCG"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
             app:chipSpacingHorizontal="8dp"
             app:chipSpacingVertical="4dp"
             app:selectionRequired="false"
-            app:layout_constraintTop_toBottomOf="@id/servicesTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:singleSelection="true"
+            app:layout_constraintTop_toBottomOf="@id/servicesTitle">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/steamChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:text="Steam"
                 android:tag="steam"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/epicChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:text="Epic Games Store"
                 android:tag="epic"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/psChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:text="Playstation Store US"
                 android:tag="ps"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/xboxChip"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:text="XBOX Marketplace"
                 android:tag="xbox" />
 
@@ -93,14 +92,16 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="4dp"
             app:layout_constraintEnd_toStartOf="@id/clearFiltersBtn"
-            android:layout_marginTop="16dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/servicesCG" />
 
         <Button
             android:id="@+id/clearFiltersBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Clear All"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/applyFiltersBtn"
             app:layout_constraintBottom_toBottomOf="@id/applyFiltersBtn"/>
 
