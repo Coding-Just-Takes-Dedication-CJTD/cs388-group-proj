@@ -1,32 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.LudexCyrpta" parent="Theme.Material3.DayNight.NoActionBar">
-
-        <!-- Primary brand colors -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorOnPrimary">@android:color/black</item>
-
-        <!-- Background (app screens) -->
-        <item name="android:colorBackground">@color/background</item>
-        <item name="colorOnBackground">@android:color/white</item>
-
-        <!-- Surface (RecyclerView items, cards, bottom sheets) -->
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@android:color/white</item>
-
-        <!-- Surface Variant (secondary text, subtle elements) -->
-        <item name="colorSurfaceVariant">@color/surface</item>
-        <item name="colorOnSurfaceVariant">@color/teal_200</item>
-
-        <!-- Error colors -->
-        <item name="colorError">#CF6679</item>
-        <item name="colorOnError">@android:color/black</item>
-        <item name="colorErrorContainer">@color/surface</item>
-
-        <!-- Status bar -->
-        <item name="android:statusBarColor">@color/surface</item>
-
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.LudexCyrpta" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
-
 </resources>
