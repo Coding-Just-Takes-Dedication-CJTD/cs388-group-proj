@@ -1,67 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
-    android:background="?attr/colorSurface"
-    tools:context=".TrendingFragment">
+    tools:context=".TrendingFragment" >
 
     <TextView
         android:id="@+id/trendPageHdr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Top 20 Trending Games"
-        android:textSize="32sp"
-        android:textStyle="bold|italic"
         android:gravity="center"
-        android:textColor="?attr/colorOnSurface"
-        android:paddingBottom="10dp"
+        android:text="Top 20 Trending Games"
+        android:textSize="40sp"
+        android:textStyle="bold|italic"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/trendList"
+        app:layout_constraintVertical_bias="0.036" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trendList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingTop="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/trendPageHdr"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="570dp"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintVertical_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/trending_game_rv_item" />
+        app:layout_constraintTop_toBottomOf="@id/trendPageHdr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/trending_game_rv_item"/>
 
     <TextView
         android:id="@+id/errorPopUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Something went wrong!"
-        android:textSize="20sp"
+        app:layoutManager="LinearLayoutManager"
+        android:text="This is an example of an error!!"
+        android:textColor="#FF0000"
+        android:textSize="40sp"
+        android:textAllCaps="true"
         android:textStyle="bold"
-        android:padding="18dp"
-        android:visibility="gone"
+        android:background="#FFFF00"
         android:gravity="center"
-        android:textColor="?attr/colorOnError"
-        android:background="?attr/colorErrorContainer"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"/>
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:indeterminate="true"
-        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Widget.AppCompat.ProgressBar"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

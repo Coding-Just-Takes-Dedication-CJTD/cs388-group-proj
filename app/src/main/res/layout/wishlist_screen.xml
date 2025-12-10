@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
     tools:context=".WishlistFragment">
 
     <TextView
@@ -13,23 +11,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Wishlist"
-        android:textSize="40sp"
+        android:textSize="40dp"
         android:textStyle="bold"
+        app:flow_verticalBias="0"
         android:layout_marginTop="16dp"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wishList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/wishTitle"
+        app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wishTitle"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/game_rv_item" />
 
     <TextView
@@ -40,11 +43,11 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="italic"
-        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textColor="#888888"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/wishTitle"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/wishTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

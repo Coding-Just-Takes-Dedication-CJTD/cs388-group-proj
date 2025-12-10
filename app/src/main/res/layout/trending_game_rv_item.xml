@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="400dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:paddingLeft="15dp"
     android:paddingBottom="15dp"
-    android:layout_marginBottom="15dp"
-    android:background="?attr/colorSurface">
+    android:background="@drawable/game_item_bg"
+    android:layout_marginBottom="15dp">
 
     <TextView
         android:id="@+id/placementNum"
@@ -17,12 +16,12 @@
         android:text="01."
         android:textSize="35sp"
         android:textStyle="bold"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/image"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.57" />
+        app:layout_constraintEnd_toStartOf="@+id/image"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.577" />
 
     <ImageView
         android:id="@+id/image"
@@ -38,68 +37,68 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game Name"
-        android:textStyle="bold"
-        android:textColor="?attr/colorOnSurface"
         android:layout_marginTop="25dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/image"
+        android:text="Game Name"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/ratingHdr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rating:"
         android:textStyle="bold"
-        android:textColor="?attr/colorOnSurface"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        android:text="Rating:"
+        android:textAppearance="?attr/textAppearanceListItem"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <TextView
         android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5.0"
+        android:textAppearance="?attr/textAppearanceListItem"
         android:paddingLeft="4dp"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        app:layout_constraintStart_toEndOf="@id/ratingHdr"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        app:layout_constraintStart_toEndOf="@+id/ratingHdr"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <TextView
         android:id="@+id/releaseDateHdr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Released:"
-        android:textStyle="bold"
-        android:textColor="?attr/colorOnSurface"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/ratingHdr" />
+        android:textStyle="bold"
+        android:text="Released:"
+        android:textAppearance="?attr/textAppearanceListItem"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toBottomOf="@+id/ratingHdr" />
 
     <TextView
         android:id="@+id/releaseDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="November 21, 2025"
+        android:textAppearance="?attr/textAppearanceListItem"
         android:paddingLeft="4dp"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        app:layout_constraintStart_toEndOf="@id/releaseDateHdr"
-        app:layout_constraintTop_toBottomOf="@id/ratingHdr" />
+        app:layout_constraintStart_toEndOf="@+id/releaseDateHdr"
+        app:layout_constraintTop_toBottomOf="@+id/ratingHdr" />
 
     <TextView
         android:id="@+id/storySummary"
         android:layout_width="215dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="This is a common game summary to illustrate how the ellipsize function works."
-        android:textStyle="italic"
-        android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/releaseDateHdr" />
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="This is a common game summary to illustrate how the ellipsize function in TextView works."
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toBottomOf="@+id/releaseDateHdr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
